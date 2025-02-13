@@ -19,8 +19,9 @@
 #include <stdio.h>
 
 // 内存区域和外设基地址定义
-#define S32K3_FLASH_BASE     0x00000000
-#define S32K3_SRAM0_BASE     0x20000000
+#define S32K3_FLASH_BASE     0x00400000  // 改为实际的 Flash 起始地址
+#define S32K3_SRAM0_BASE     0x20400000
+
 #define S32K3_PERIPH_BASE    0x40000000
 #define S32K3_UART_BASE      (S32K3_PERIPH_BASE + 0x00000)
 #define S32K3X8EVB_FLASH_SIZE    (4 * MiB)
@@ -32,39 +33,11 @@
 // ROM 设备实现
 static void s32k3x8_rom_init(Object *obj)
 {
-    S32K3X8ROMState *s = S32K3X8_ROM(obj);
-     uint32_t *rom_ptr;
+   S32K3X8ROMState *s = S32K3X8_ROM(obj);
 
+    // 只初始化 ROM 内存区域，不需要预设向量表
     memory_region_init_rom(&s->flash, obj, "s32k3x8evb.flash",
                           S32K3X8EVB_FLASH_SIZE, &error_fatal);
-    rom_ptr = memory_region_get_ram_ptr(&s->flash);
-
-    // 向量表必须 8 字节对齐
-    static const uint32_t vector_table[] __attribute__((aligned(8))) = {
-        [0] = S32K3_SRAM0_BASE + S32K3X8EVB_SRAM_SIZE,  // 初始SP
-        [1] = S32K3_FLASH_BASE + 0x200 + 1,  // +1 表示 Thumb 模式
-        [2] = S32K3_FLASH_BASE + 0x200 + 1,
-        [3] = S32K3_FLASH_BASE + 0x200 + 1,  // HardFault
-        [4] = S32K3_FLASH_BASE + 0x200 + 1,
-        [5] = S32K3_FLASH_BASE + 0x200 + 1,
-        [6] = S32K3_FLASH_BASE + 0x200 + 1,
-        [7] = 0,  // Reserved
-    };
-
-    // 写入向量表
-    memcpy(rom_ptr, vector_table, sizeof(vector_table));
-
-    // Thumb 模式异常处理程序（注意：使用 uint16_t 确保指令对齐）
-    static const uint16_t exception_handler[] = {
-        0x4668,  // MOV r0, sp  ; 保存 sp
-        0x4770,  // BX lr       ; 返回
-        0xE7FE   // B .         ; 以防万一的无限循环
-    };
-
-    // 确保代码对齐写入
-    memcpy((uint16_t *)(rom_ptr + 0x200/sizeof(uint32_t)), 
-           exception_handler, 
-           sizeof(exception_handler));
 
     // 设置只读
     memory_region_set_readonly(&s->flash, true);
@@ -138,6 +111,10 @@ static void s32k3x8evb_init(MachineState *machine)
     DeviceState *dev;
     
     qemu_log_mask(CPU_LOG_INT, "Initializing S32K3X8EVB board\n");
+    MemoryRegion *flash_alias = g_new(MemoryRegion, 1);
+
+
+
     
     // 1. 检查并获取系统内存
     MemoryRegion *system_memory = get_system_memory();
@@ -172,7 +149,52 @@ static void s32k3x8evb_init(MachineState *machine)
     // 4. 设置内存映射
     sysbus_mmio_map(SYS_BUS_DEVICE(s->rom), 0, S32K3_FLASH_BASE);
     sysbus_mmio_map(SYS_BUS_DEVICE(s->ram), 0, S32K3_SRAM0_BASE);
-    
+
+    //another name
+      memory_region_init_alias(flash_alias, OBJECT(machine), "s32k3x8evb.flash_alias",
+                           &S32K3X8_ROM(s->rom)->flash, 0, S32K3X8EVB_FLASH_SIZE);
+    memory_region_add_subregion(system_memory, 0x00000000, flash_alias);   
+   //read vector table
+    if (machine->kernel_filename) {
+        // 获取 Flash 内存区域的指针
+        uint8_t *flash_ptr = memory_region_get_ram_ptr(&S32K3X8_ROM(s->rom)->flash);
+        
+        // 打开固件文件
+        int fd = open(machine->kernel_filename, O_RDONLY);
+        if (fd < 0) {
+            error_report("Failed to open kernel file %s", machine->kernel_filename);
+            return;
+        }
+
+        // 获取文件大小
+        off_t size = lseek(fd, 0, SEEK_END);
+        lseek(fd, 0, SEEK_SET);
+
+
+        qemu_log_mask(CPU_LOG_INT, "Loading firmware, size: %ld bytes\n", size);
+
+        // 读取固件到 Flash
+        if (read(fd, flash_ptr, size) != size) {
+            error_report("Failed to read kernel file");
+            close(fd);
+            return;
+        }
+        close(fd);
+
+        // 打印加载后的向量表内容
+        uint32_t *vector_table = (uint32_t *)flash_ptr;
+        qemu_log_mask(CPU_LOG_INT, "Vector table after loading:\n");
+        qemu_log_mask(CPU_LOG_INT, "Initial SP: 0x%08x\n", vector_table[0]);
+        qemu_log_mask(CPU_LOG_INT, "Reset Vector: 0x%08x\n", vector_table[1]);
+	qemu_log_mask(CPU_LOG_INT, "First 32 bytes of firmware:\n");
+    for (int i = 0; i < 32; i++) {
+        qemu_log_mask(CPU_LOG_INT, "%02x ", flash_ptr[i]);
+        if ((i + 1) % 16 == 0) qemu_log_mask(CPU_LOG_INT, "\n");
+    }
+    } else {
+        error_report("No firmware file specified");
+        return;
+    }
     // 5. 初始化ARM核心
     object_initialize_child(OBJECT(machine), "armv7m", &s->armv7m, TYPE_ARMV7M);
     

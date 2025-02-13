@@ -1,0 +1,19 @@
+Initializing S32K3X8EVB board
+Initializing S32K3X8 RAM
+Loading firmware, size: 3372 bytes
+Vector table after loading:
+Initial SP: 0x5aa55aa5
+Reset Vector: 0x00000001
+First 32 bytes of firmware:
+a5 5a a5 5a 01 00 00 00 00 00 00 00 00 08 40 00 
+00 00 00 00 00 08 40 00 00 00 00 00 00 08 40 00 
+CPU Reset (CPU 0)
+R00=00000000 R01=00000000 R02=00000000 R03=00000000
+R04=00000000 R05=00000000 R06=00000000 R07=00000000
+R08=00000000 R09=00000000 R10=00000000 R11=00000000
+R12=00000000 R13=00000000 R14=00000000 R15=00000000
+XPSR=40000000 -Z-- A priv-thread
+Loaded reset SP 0x5aa55aa5 PC 0x1 from vector table
+Initializing UART
+Resetting S32K3X8EVB system
+S32K3X8EVB board initialization complete

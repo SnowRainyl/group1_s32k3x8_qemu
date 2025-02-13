@@ -98,6 +98,11 @@
       - entry one ram start
       - entry one ram end
 */
+.section .data
+.global RESET_CATCH_CORE
+RESET_CATCH_CORE:
+    .word 0x00000000
+
 .section ".init_table", "a"
   .long 6
   .long __RAM_CACHEABLE_START
