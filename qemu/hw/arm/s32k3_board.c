@@ -33,13 +33,9 @@
 // ROM 设备实现
 static void s32k3x8_rom_init(Object *obj)
 {
-   S32K3X8ROMState *s = S32K3X8_ROM(obj);
-
-    // 只初始化 ROM 内存区域，不需要预设向量表
+    S32K3X8ROMState *s = S32K3X8_ROM(obj);
     memory_region_init_rom(&s->flash, obj, "s32k3x8evb.flash",
                           S32K3X8EVB_FLASH_SIZE, &error_fatal);
-
-    // 设置只读
     memory_region_set_readonly(&s->flash, true);
 }
 
@@ -68,9 +64,7 @@ static const TypeInfo s32k3x8_rom_info = {
 static void s32k3x8_ram_init(Object *obj)
 {
     S32K3X8RAMState *s = S32K3X8_RAM(obj);
-    
     qemu_log_mask(CPU_LOG_INT, "Initializing S32K3X8 RAM\n");
-    
     memory_region_init_ram(&s->sram, obj, "s32k3x8evb.sram",
                           S32K3X8EVB_SRAM_SIZE, &error_fatal);
 }
@@ -96,12 +90,6 @@ static const TypeInfo s32k3x8_ram_info = {
     .class_init    = s32k3x8_ram_class_init,
 };
 
-// 系统复位函数
-static void s32k3x8_reset_system(S32K3X8EVBState *s)
-{
-    qemu_log_mask(CPU_LOG_INT, "Resetting S32K3X8EVB system\n");
-    // 在这里添加任何需要的系统复位代码
-}
 
 // 板级初始化函数
 static void s32k3x8evb_init(MachineState *machine)
@@ -112,9 +100,6 @@ static void s32k3x8evb_init(MachineState *machine)
     
     qemu_log_mask(CPU_LOG_INT, "Initializing S32K3X8EVB board\n");
     MemoryRegion *flash_alias = g_new(MemoryRegion, 1);
-
-
-
     
     // 1. 检查并获取系统内存
     MemoryRegion *system_memory = get_system_memory();
@@ -234,10 +219,7 @@ static void s32k3x8evb_init(MachineState *machine)
     
     // 映射UART
     sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, S32K3_UART_BASE);
-    
-    // 9. 执行系统复位
-    s32k3x8_reset_system(s);
-    
+        
     qemu_log_mask(CPU_LOG_INT, "S32K3X8EVB board initialization complete\n");
 }
 
