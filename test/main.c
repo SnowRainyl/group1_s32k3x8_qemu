@@ -1,20 +1,48 @@
-#include <stdint.h>
-void startup_go_to_user_mode(void)
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
 {
-    // 空实现即可
-    return;
+    (void)xTask;
+    (void)pcTaskName;
+    /* 栈溢出处理 */
+    for(;;);
 }
-void SystemInit(void)
+
+void vApplicationMallocFailedHook(void)
 {
-    // 在这个阶段我们不需要做任何系统初始化
-    // CPU 的寄存器在 startup_cm7.s 中已经被清零
+    /* 内存分配失败处理 */
+    for(;;);
+}
+
+// LED 闪烁任务
+void vLEDTask(void *pvParameters)
+{
+    while(1) {
+        // 模拟 LED 闪烁
+        printf("LED Toggle\n");
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+}
+
+// UART 打印任务
+void vUARTTask(void *pvParameters)
+{
+    while(1) {
+        printf("UART Task Running\n");
+        vTaskDelay(pdMS_TO_TICKS(2000));
+    }
 }
 
 int main(void)
 {
-    while(1) {
-        // 空循环
-        __asm("nop");
-    }
-    return 0;
+    // 创建任务
+    xTaskCreate(vLEDTask, "LED Task", 128, NULL, 1, NULL);
+    xTaskCreate(vUARTTask, "UART Task", 128, NULL, 1, NULL);
+    
+    // 启动调度器
+    vTaskStartScheduler();
+    
+    // 正常情况下不会到达这里
+    while(1);
 }

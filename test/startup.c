@@ -88,6 +88,18 @@ extern uint32 __INDEX_COPY_CORE2[];
  
 void init_data_bss(void);
 void init_data_bss_core2(void);
+void SystemInit(void);
+void startup_go_to_user_mode(void);
+
+void SystemInit(void)
+{
+    // 基本系统初始化
+}
+
+void startup_go_to_user_mode(void)
+{
+    // 用户模式切换
+}
 
 void init_data_bss(void)
 {
