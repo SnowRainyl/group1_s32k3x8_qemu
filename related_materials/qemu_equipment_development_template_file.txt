@@ -1,0 +1,40 @@
+static void mydev_realize(DeviceState *dev, Error **errp)
+{
+    
+}
+
+static void mydev_instance_init(Object *obj)
+{
+    
+}
+
+static Property mydev_properties[] = {
+    DEFINE_PROP_xxx("myprop", MyDevState, field, ...),
+    
+    DEFINE_PROP_END_OF_LIST(),
+};
+
+static void mydev_class_init(ObjectClass *oc, void *data)
+{
+    DeviceClass *dc = DEVICE_CLASS(oc);
+
+    dc->realize = mydev_realize;
+    dc->desc = "My cool device";
+    dc->props = mydev_properties;
+    
+}
+
+static const TypeInfo mydev_info = {
+    .name          = TYPE_MYDEV,
+    .parent        = TYPE_SYS_BUS_DEVICE,  
+    .instance_size = sizeof(mydev_state),
+    .instance_init = mydev_instance_init,
+    .class_init    = mydev_class_init,
+};
+
+static void mydev_register_types(void)
+{
+    type_register_static(&mydev_info);
+}
+
+type_init(mydev_register_types)
