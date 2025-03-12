@@ -9,7 +9,7 @@
 #include "hw/sysbus.h"
 #include "hw/arm/s32k3x8evb.h"
 #include "hw/char/s32k3x8_uart.h"
-#include "hw/char/s32k3x8_spi.h"
+#include "hw/char/s32k3x8_lpspi.h"
 #include "hw/arm/boot.h"
 #include "hw/qdev-properties.h"
 #include "hw/qdev-clock.h"
@@ -134,7 +134,7 @@ static void s32k3x8evb_init(MachineState *machine)
     
     
     printf("initial lpspi board!\n\n");
-    dev = qdev_new(TYPE_S32K3X8_SPI);
+    dev = qdev_new(TYPE_S32K3X8_LPSPI);
     if (!dev) {
         error_report("Failed to create LPSPI device");
         return;
@@ -173,4 +173,4 @@ static void s32k3x8evb_machine_init(void)
     printf("Registration complete for type: %s\n", s32k3x8evb_type.name);
 }
 
-type_init(s32k3x8evb_machine_init)
+type_init(s32k3x8evb_machine_init);
