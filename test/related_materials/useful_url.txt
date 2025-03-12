@@ -1,0 +1,3 @@
+https://lifeislife.cn/posts/qemu-s-instance-init-vs-realize/
+
+Source code comparison：https://github.com/qemu/qemu
