@@ -1,4 +1,4 @@
-Build started at 2025-02-12T14:30:16.013192
+Build started at 2025-03-14T17:15:19.851607
 Main binary: /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/pyvenv/bin/python3
 Build Options: -Ddocs=disabled -Dplugins=true --native-file=/home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/config-meson.cross
 Python system: Linux
@@ -527,28 +527,28 @@ Cached compiler stderr:
 Compiler for C supports arguments -Wno-typedef-redefinition: NO (cached)
 Program cgcc found: NO
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpbl8873e_
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp_xo5lkii
 Code:
 int main(void) { return 0; }
 
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpbl8873e_/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpbl8873e_/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lm -Wl,--allow-shlib-undefined` -> 0
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp_xo5lkii/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp_xo5lkii/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lm -Wl,--allow-shlib-undefined` -> 0
 Library m found: YES
 Dependency threads found: YES unknown (cached)
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp888i5tyt
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpe535smfm
 Code:
 int main(void) { return 0; }
 
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp888i5tyt/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp888i5tyt/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lutil -Wl,--allow-shlib-undefined` -> 0
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpe535smfm/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpe535smfm/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lutil -Wl,--allow-shlib-undefined` -> 0
 Library util found: YES
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpcq8cw2rt
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp_v8e3tqd
 Code:
 int main(void) { return 0; }
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpcq8cw2rt/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpcq8cw2rt/output.exe -D_FILE_OFFSET_BITS=64 -O0 -framework Hypervisor` -> 1
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp_v8e3tqd/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp_v8e3tqd/output.exe -D_FILE_OFFSET_BITS=64 -O0 -framework Hypervisor` -> 1
 stderr:
 cc: error: unrecognized command-line option '-framework'
 -----------
@@ -568,12 +568,12 @@ Package 'xencontrol', required by 'virtual:world', not found
 -----------
 Run-time dependency xencontrol found: NO (tried pkgconfig)
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpljqedw0x
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpbr5rs53h
 Code:
 int main(void) { return 0; }
 
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpljqedw0x/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpljqedw0x/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lxenstore -Wl,--allow-shlib-undefined` -> 1
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpbr5rs53h/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpbr5rs53h/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lxenstore -Wl,--allow-shlib-undefined` -> 1
 stderr:
 /usr/bin/ld: cannot find -lxenstore: No such file or directory
 collect2: error: ld returned 1 exit status
@@ -597,11 +597,11 @@ Cached run stdout:
 Cached run stderr:
  
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmps_ceevlg
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpiah0bp77
 Code:
 
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmps_ceevlg/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmps_ceevlg/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 --print-search-dirs` -> 0
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpiah0bp77/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpiah0bp77/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 --print-search-dirs` -> 0
 stdout:
 install: /usr/lib/gcc/x86_64-linux-gnu/14/
 programs: =/usr/libexec/gcc/x86_64-linux-gnu/14/:/usr/libexec/gcc/x86_64-linux-gnu/14/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/14/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/14/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/14/:/usr/lib/gcc/x86_64-linux-gnu/14/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/14/../../../../x86_64-linux-gnu/bin/
@@ -609,82 +609,82 @@ libraries: =/usr/lib/gcc/x86_64-linux-gnu/14/:/usr/lib/gcc/x86_64-linux-gnu/14/.
 -----------
 Library xenstore found: NO
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpqupeogp_
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpr0gh1j4x
 Code:
 int main(void) { return 0; }
 
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpqupeogp_/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpqupeogp_/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lxenctrl -Wl,--allow-shlib-undefined` -> 1
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpr0gh1j4x/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpr0gh1j4x/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lxenctrl -Wl,--allow-shlib-undefined` -> 1
 stderr:
 /usr/bin/ld: cannot find -lxenctrl: No such file or directory
 collect2: error: ld returned 1 exit status
 -----------
 Library xenctrl found: NO
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp5m8j3x37
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpwzxks44b
 Code:
 int main(void) { return 0; }
 
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp5m8j3x37/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp5m8j3x37/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lxendevicemodel -Wl,--allow-shlib-undefined` -> 1
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpwzxks44b/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpwzxks44b/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lxendevicemodel -Wl,--allow-shlib-undefined` -> 1
 stderr:
 /usr/bin/ld: cannot find -lxendevicemodel: No such file or directory
 collect2: error: ld returned 1 exit status
 -----------
 Library xendevicemodel found: NO
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpx2nwb2rc
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp_p8d8g0h
 Code:
 int main(void) { return 0; }
 
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpx2nwb2rc/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpx2nwb2rc/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lxenforeignmemory -Wl,--allow-shlib-undefined` -> 1
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp_p8d8g0h/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp_p8d8g0h/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lxenforeignmemory -Wl,--allow-shlib-undefined` -> 1
 stderr:
 /usr/bin/ld: cannot find -lxenforeignmemory: No such file or directory
 collect2: error: ld returned 1 exit status
 -----------
 Library xenforeignmemory found: NO
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp6_2pr6wa
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmppev9x3bf
 Code:
 int main(void) { return 0; }
 
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp6_2pr6wa/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp6_2pr6wa/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lxengnttab -Wl,--allow-shlib-undefined` -> 1
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmppev9x3bf/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmppev9x3bf/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lxengnttab -Wl,--allow-shlib-undefined` -> 1
 stderr:
 /usr/bin/ld: cannot find -lxengnttab: No such file or directory
 collect2: error: ld returned 1 exit status
 -----------
 Library xengnttab found: NO
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpz39hz6q0
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpy91bumew
 Code:
 int main(void) { return 0; }
 
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpz39hz6q0/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpz39hz6q0/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lxenevtchn -Wl,--allow-shlib-undefined` -> 1
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpy91bumew/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpy91bumew/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lxenevtchn -Wl,--allow-shlib-undefined` -> 1
 stderr:
 /usr/bin/ld: cannot find -lxenevtchn: No such file or directory
 collect2: error: ld returned 1 exit status
 -----------
 Library xenevtchn found: NO
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp3yyqf26c
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpy7g2ul9i
 Code:
 int main(void) { return 0; }
 
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp3yyqf26c/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp3yyqf26c/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lxentoolcore -Wl,--allow-shlib-undefined` -> 1
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpy7g2ul9i/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpy7g2ul9i/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lxentoolcore -Wl,--allow-shlib-undefined` -> 1
 stderr:
 /usr/bin/ld: cannot find -lxentoolcore: No such file or directory
 collect2: error: ld returned 1 exit status
 -----------
 Library xentoolcore found: NO
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp17g55pku
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpjq1kvb9d
 Source file: /home/yuqi/torin/first_y/01_os_class/01_project/qemu/scripts/xen-detect.c
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/scripts/xen-detect.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp17g55pku/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -DCONFIG_XEN_CTRL_INTERFACE_VERSION=41100` -> 1
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/scripts/xen-detect.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpjq1kvb9d/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -DCONFIG_XEN_CTRL_INTERFACE_VERSION=41100` -> 1
 stderr:
 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/scripts/xen-detect.c:7:12: fatal error: xendevicemodel.h: No such file or directory
     7 |   #include <xendevicemodel.h>
@@ -692,10 +692,10 @@ stderr:
 compilation terminated.
 -----------
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpx7x0po6e
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpjzdzzfdw
 Source file: /home/yuqi/torin/first_y/01_os_class/01_project/qemu/scripts/xen-detect.c
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/scripts/xen-detect.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpx7x0po6e/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -DCONFIG_XEN_CTRL_INTERFACE_VERSION=41000` -> 1
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/scripts/xen-detect.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpjzdzzfdw/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -DCONFIG_XEN_CTRL_INTERFACE_VERSION=41000` -> 1
 stderr:
 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/scripts/xen-detect.c:24:12: fatal error: xenforeignmemory.h: No such file or directory
    24 |   #include <xenforeignmemory.h>
@@ -703,10 +703,10 @@ stderr:
 compilation terminated.
 -----------
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp11cfja7x
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpra7s2aiy
 Source file: /home/yuqi/torin/first_y/01_os_class/01_project/qemu/scripts/xen-detect.c
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/scripts/xen-detect.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp11cfja7x/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -DCONFIG_XEN_CTRL_INTERFACE_VERSION=40900` -> 1
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/scripts/xen-detect.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpra7s2aiy/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -DCONFIG_XEN_CTRL_INTERFACE_VERSION=40900` -> 1
 stderr:
 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/scripts/xen-detect.c:39:12: fatal error: xendevicemodel.h: No such file or directory
    39 |   #include <xendevicemodel.h>
@@ -714,10 +714,10 @@ stderr:
 compilation terminated.
 -----------
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpm1hz3el1
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpacux0uz9
 Source file: /home/yuqi/torin/first_y/01_os_class/01_project/qemu/scripts/xen-detect.c
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/scripts/xen-detect.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpm1hz3el1/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -DCONFIG_XEN_CTRL_INTERFACE_VERSION=40800` -> 1
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/scripts/xen-detect.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpacux0uz9/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -DCONFIG_XEN_CTRL_INTERFACE_VERSION=40800` -> 1
 stderr:
 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/scripts/xen-detect.c:60:12: fatal error: xenctrl.h: No such file or directory
    60 |   #include <xenctrl.h>
@@ -725,10 +725,10 @@ stderr:
 compilation terminated.
 -----------
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp3ih_mkx3
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpyl906clk
 Source file: /home/yuqi/torin/first_y/01_os_class/01_project/qemu/scripts/xen-detect.c
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/scripts/xen-detect.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp3ih_mkx3/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -DCONFIG_XEN_CTRL_INTERFACE_VERSION=40701` -> 1
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/scripts/xen-detect.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpyl906clk/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -DCONFIG_XEN_CTRL_INTERFACE_VERSION=40701` -> 1
 stderr:
 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/scripts/xen-detect.c:105:12: fatal error: xenctrl.h: No such file or directory
   105 |   #include <xenctrl.h>
@@ -856,39 +856,39 @@ Cached compiler stdout:
 Cached compiler stderr:
  
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmplw15po33
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp2tjgmozp
 Code:
 int main(void) { return 0; }
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmplw15po33/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmplw15po33/output.exe -D_FILE_OFFSET_BITS=64 -O0 -framework Cocoa` -> 1
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp2tjgmozp/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp2tjgmozp/output.exe -D_FILE_OFFSET_BITS=64 -O0 -framework Cocoa` -> 1
 stderr:
 cc: error: unrecognized command-line option '-framework'
 -----------
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpve44_885
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpei3y7k11
 Code:
 int main(void) { return 0; }
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpve44_885/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpve44_885/output.exe -D_FILE_OFFSET_BITS=64 -O0 -framework CoreVideo` -> 1
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpei3y7k11/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpei3y7k11/output.exe -D_FILE_OFFSET_BITS=64 -O0 -framework CoreVideo` -> 1
 stderr:
 cc: error: unrecognized command-line option '-framework'
 -----------
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpigsib600
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpy0lwd15j
 Code:
 int main(void) { return 0; }
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpigsib600/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpigsib600/output.exe -D_FILE_OFFSET_BITS=64 -O0 -framework QuartzCore` -> 1
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpy0lwd15j/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpy0lwd15j/output.exe -D_FILE_OFFSET_BITS=64 -O0 -framework QuartzCore` -> 1
 stderr:
 cc: error: unrecognized command-line option '-framework'
 -----------
 Run-time dependency appleframeworks found: NO (tried framework)
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpdxv862sh
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpb9dq1iu8
 Code:
 int main(void) { return 0; }
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpdxv862sh/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpdxv862sh/output.exe -D_FILE_OFFSET_BITS=64 -O0 -framework vmnet` -> 1
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpb9dq1iu8/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpb9dq1iu8/output.exe -D_FILE_OFFSET_BITS=64 -O0 -framework vmnet` -> 1
 stderr:
 cc: error: unrecognized command-line option '-framework'
 -----------
@@ -1054,12 +1054,12 @@ Package 'spice-server', required by 'virtual:world', not found
 -----------
 Run-time dependency spice-server found: NO (tried pkgconfig)
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp6wescpue
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpqrey8kkh
 Code:
 int main(void) { return 0; }
 
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp6wescpue/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp6wescpue/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lrt -Wl,--allow-shlib-undefined` -> 0
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpqrey8kkh/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpqrey8kkh/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lrt -Wl,--allow-shlib-undefined` -> 0
 Library rt found: YES
 Determining dependency 'libiscsi' with pkg-config executable '/usr/bin/pkg-config'
 env[PKG_CONFIG_PATH]: 
@@ -1194,12 +1194,12 @@ Package 'libudev', required by 'virtual:world', not found
 -----------
 Run-time dependency libudev found: NO (tried pkgconfig)
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmphh_1_ap5
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp23hgs3ui
 Code:
 int main(void) { return 0; }
 
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmphh_1_ap5/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmphh_1_ap5/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lmpathpersist -Wl,--allow-shlib-undefined` -> 1
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp23hgs3ui/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp23hgs3ui/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lmpathpersist -Wl,--allow-shlib-undefined` -> 1
 stderr:
 /usr/bin/ld: cannot find -lmpathpersist: No such file or directory
 collect2: error: ld returned 1 exit status
@@ -1330,12 +1330,12 @@ Found CMake: NO
 CMake binary for machine host machine not found. Giving up.
 Run-time dependency sdl2 found: NO (tried pkgconfig, config-tool and cmake)
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpwbk5i9qm
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpekar0ry5
 Code:
 int main(void) { return 0; }
 
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpwbk5i9qm/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpwbk5i9qm/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lrados -Wl,--allow-shlib-undefined` -> 1
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpekar0ry5/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpekar0ry5/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lrados -Wl,--allow-shlib-undefined` -> 1
 stderr:
 /usr/bin/ld: cannot find -lrados: No such file or directory
 collect2: error: ld returned 1 exit status
@@ -1709,12 +1709,12 @@ Cached compiler stderr:
 
 Has header "numa.h" : NO (cached)
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpthv2hvom
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp_42j3nli
 Code:
 int main(void) { return 0; }
 
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpthv2hvom/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpthv2hvom/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lfdt -Wl,--allow-shlib-undefined` -> 0
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp_42j3nli/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp_42j3nli/output.exe -D_FILE_OFFSET_BITS=64 -O0 -lfdt -Wl,--allow-shlib-undefined` -> 0
 Library fdt found: YES
 Using cached compile:
 Cached command line:  cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp6461bwtp/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp6461bwtp/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -lfdt 
@@ -1749,12 +1749,12 @@ Cached compiler stderr:
 
 Has header "rdma/rdma_cma.h" : NO (cached)
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpdz7poasb
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmplywscllm
 Code:
 int main(void) { return 0; }
 
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpdz7poasb/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmpdz7poasb/output.exe -D_FILE_OFFSET_BITS=64 -O0 -libverbs -Wl,--allow-shlib-undefined` -> 1
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmplywscllm/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmplywscllm/output.exe -D_FILE_OFFSET_BITS=64 -O0 -libverbs -Wl,--allow-shlib-undefined` -> 1
 stderr:
 /usr/bin/ld: cannot find -libverbs: No such file or directory
 collect2: error: ld returned 1 exit status
@@ -8073,11 +8073,11 @@ qemu 9.1.91
 
 Found ninja-1.12.1 at /usr/bin/ninja
 Running compile:
-Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp6sd6oprr
+Working directory:  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp1wtg_syw
 Code:
 
 -----------
-Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp6sd6oprr/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp6sd6oprr/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 --print-search-dirs` -> 0
+Command line: `cc -m64 /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp1wtg_syw/testfile.c -o /home/yuqi/torin/first_y/01_os_class/01_project/qemu/build/meson-private/tmp1wtg_syw/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 --print-search-dirs` -> 0
 stdout:
 install: /usr/lib/gcc/x86_64-linux-gnu/14/
 programs: =/usr/libexec/gcc/x86_64-linux-gnu/14/:/usr/libexec/gcc/x86_64-linux-gnu/14/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/14/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/14/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/14/:/usr/lib/gcc/x86_64-linux-gnu/14/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/14/../../../../x86_64-linux-gnu/bin/

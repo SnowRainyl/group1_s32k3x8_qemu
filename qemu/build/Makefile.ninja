@@ -1654,7 +1654,6 @@ libcommon.a.p/hw_char_mchp_pfsoc_mmuart.c.o \
 libcommon.a.p/hw_char_riscv_htif.c.o \
 libcommon.a.p/hw_char_goldfish_tty.c.o \
 libcommon.a.p/hw_char_s32k3x8_uart.c.o \
-libcommon.a.p/hw_char_s32k3x8_spi.c.o \
 libcommon.a.p/hw_core_loader-fit.c.o \
 libcommon.a.p/hw_core_generic-loader.c.o \
 libcommon.a.p/hw_core_guest-loader.c.o \

@@ -15837,7 +15837,6 @@
           "/home/yuqi/torin/first_y/01_os_class/01_project/qemu/hw/char/riscv_htif.c",
           "/home/yuqi/torin/first_y/01_os_class/01_project/qemu/hw/char/goldfish_tty.c",
           "/home/yuqi/torin/first_y/01_os_class/01_project/qemu/hw/char/s32k3x8_uart.c",
-          "/home/yuqi/torin/first_y/01_os_class/01_project/qemu/hw/char/s32k3x8_spi.c",
           "/home/yuqi/torin/first_y/01_os_class/01_project/qemu/hw/core/loader-fit.c",
           "/home/yuqi/torin/first_y/01_os_class/01_project/qemu/hw/core/generic-loader.c",
           "/home/yuqi/torin/first_y/01_os_class/01_project/qemu/hw/core/guest-loader.c",
@@ -21886,7 +21885,7 @@
     "extra_files": [],
     "subproject": "berkeley-testfloat-3",
     "dependencies": [
-      "dep131027115923584"
+      "dep129944387733360"
     ],
     "depends": [],
     "installed": false
@@ -21972,7 +21971,7 @@
     "extra_files": [],
     "subproject": "berkeley-testfloat-3",
     "dependencies": [
-      "dep131027115924544"
+      "dep129944387734512"
     ],
     "depends": [],
     "installed": false
@@ -22127,9 +22126,9 @@
     "extra_files": [],
     "subproject": null,
     "dependencies": [
-      "dep131027115926704",
-      "dep131027115923776",
-      "dep131027115922384"
+      "dep129944387732304",
+      "dep129944387737104",
+      "dep129944387734128"
     ],
     "depends": [],
     "win_subsystem": "console",
@@ -22284,8 +22283,8 @@
     "extra_files": [],
     "subproject": null,
     "dependencies": [
-      "dep131027117909312",
-      "dep131027117902112"
+      "dep129944387691504",
+      "dep129944387686464"
     ],
     "depends": [],
     "win_subsystem": "console",
@@ -22430,7 +22429,7 @@
     "extra_files": [],
     "subproject": null,
     "dependencies": [
-      "dep131027117920128"
+      "dep129944390824592"
     ],
     "depends": [],
     "win_subsystem": "console",

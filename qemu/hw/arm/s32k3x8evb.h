@@ -15,8 +15,8 @@
 //define the size of memory--mapping
 //#define S32K3_SRAM0_BASE     0x40264000  //PRAMC_0 
 //#define S32K3_FLASH_BASE     0x00400000  // FLASH 
-
-#define S32K3_FLASH_BASE 0x00400000  // 修改Flash基地址
+#define S32K3_FLASH_BASE 0x0 
+//#define S32K3_FLASH_BASE 0x00400000  // 修改Flash基地址
 #define S32K3_SRAM0_BASE 0x20400000
 
 // 定义设备类型标识符

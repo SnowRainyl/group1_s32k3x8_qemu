@@ -255,9 +255,7 @@ libcommon.a.p/hw_char_s32k3x8_uart.c.o: ../hw/char/s32k3x8_uart.c \
  /usr/include/x86_64-linux-gnu/sys/sysmacros.h \
  /usr/include/x86_64-linux-gnu/bits/sysmacros.h \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/qemu/typedefs.h \
- /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/qemu/log.h \
- /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/qemu/log-for-trace.h \
- /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/hw/qdev-properties.h \
+ /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/hw/sysbus.h \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/hw/qdev-core.h \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/qemu/atomic.h \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/qemu/compiler.h \
@@ -285,11 +283,6 @@ libcommon.a.p/hw_char_s32k3x8_uart.c.o: ../hw/char/s32k3x8_uart.c \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/qemu/module.h \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/hw/hotplug.h \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/hw/resettable.h \
- /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/migration/vmstate.h \
- /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/hw/vmstate-if.h \
- /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/hw/irq.h \
- ../hw/char/s32k3x8_uart.h \
- /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/hw/sysbus.h \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/exec/memory.h \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/exec/cpu-common.h \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/exec/vaddr.h \
@@ -312,6 +305,12 @@ libcommon.a.p/hw_char_s32k3x8_uart.c.o: ../hw/char/s32k3x8_uart.c \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/exec/memory_ldst.h.inc \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/exec/memory_ldst_phys.h.inc \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/exec/memory_ldst_cached.h.inc \
+ /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/migration/vmstate.h \
+ /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/hw/vmstate-if.h \
+ /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/qapi/error.h \
+ qapi/qapi-types-error.h \
+ /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/qemu/error-report.h \
+ /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/qemu/timer.h \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/chardev/char-fe.h \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/chardev/char.h \
  qapi/qapi-types-char.h qapi/qapi-types-sockets.h \
@@ -319,11 +318,14 @@ libcommon.a.p/hw_char_s32k3x8_uart.c.o: ../hw/char/s32k3x8_uart.c \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/block/aio.h \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/qemu/coroutine-core.h \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/qemu/event_notifier.h \
- /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/qemu/timer.h \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/block/graph-lock.h \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/sysemu/event-loop-base.h \
- /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/hw/registerfields.h \
- /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/hw/char/ibex_uart.h \
- /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/hw/qdev-clock.h \
- /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/hw/clock.h \
- /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/hw/qdev-properties-system.h
+ /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/chardev/char-serial.h \
+ /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/hw/qdev-properties.h \
+ /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/hw/qdev-properties-system.h \
+ ../hw/char/trace.h trace/trace-hw_char.h \
+ /home/yuqi/torin/first_y/01_os_class/01_project/qemu/trace/control.h \
+ /home/yuqi/torin/first_y/01_os_class/01_project/qemu/trace/event-internal.h \
+ /home/yuqi/torin/first_y/01_os_class/01_project/qemu/trace/control-internal.h \
+ /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/qemu/log-for-trace.h \
+ /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/hw/irq.h

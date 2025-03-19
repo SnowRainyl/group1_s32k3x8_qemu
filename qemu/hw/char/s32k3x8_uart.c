@@ -1,415 +1,344 @@
+/*
+ *S32E8_LPUART Emulation
+ *
+ */
 #include "qemu/osdep.h"
-#include "qemu/log.h"
-#include "hw/qdev-properties.h"
+#include "hw/sysbus.h"
 #include "migration/vmstate.h"
+#include "qapi/error.h"
+#include "qemu/error-report.h"
 #include "qemu/module.h"
-#include "hw/irq.h"
-#include "s32k3x8_uart.h"
-#include "hw/registerfields.h"
-#include "hw/qdev-core.h"
-#include "chardev/char.h"
+#include "qemu/timer.h"
 #include "chardev/char-fe.h"
-#include "hw/char/ibex_uart.h"
-#include "hw/qdev-clock.h"
+#include "chardev/char-serial.h"
+#include "hw/qdev-core.h"
 #include "hw/qdev-properties.h"
 #include "hw/qdev-properties-system.h"
+#include "hw/sysbus.h"  
+#include "trace.h"
+#include "qom/object.h"
+#include "hw/irq.h" // 添加缺少的头文件
 
+/*define everything*/ 
+//=========================================================================
+#define TYPE_S32E8_LPUART "S32E8_LPUART"
+#define S32E8_LPUART_REGS_MEM_SIZE 0x800
+#define I_(reg) (reg / sizeof(uint32_t))
 
+/* UART Register definitions */
+/*data from rm 4609/5253 page*/
+#define VERID_OFFSET      0x00    /* Version ID Register */
+#define PARAM_OFFSET      0x04    /* Parameter Register */
+#define GLOBAL_OFFSET     0x08    /* Global Register */
+#define PINCFG_OFFSET     0x0C    /* Pin Configuration Register */
+#define BAUD_OFFSET       0x10    /* Baud Rate Register */
+#define STAT_OFFSET       0x14    /* Status Register */
+#define CTRL_OFFSET       0x18    /* Control Register */
+#define DATA_OFFSET       0x1C    /* Data Register */
+#define MATCH_OFFSET      0x20    /* Match Address Register */
+#define MODIR_OFFSET      0x24    /* MODEM IrDA Register */
+#define FIFO_OFFSET       0x28    /* FIFO Register */
+#define WATER_OFFSET      0x2C    /* Watermark Register */
+#define DATARO_OFFSET     0x30    /* Data Read-Only Register */
+#define MCR_OFFSET        0x40    /* MODEM Control Register */
+#define MSR_OFFSET        0x44    /* MODEM Status Register */
+#define REIR_OFFSET       0x48    /* Receiver Extended Idle Register */
+#define TEIR_OFFSET       0x4C    /* Transmitter Extended Idle Register */
+#define HDCR_OFFSET       0x50    /* Half Duplex Control Register */
+#define TOCR_OFFSET       0x58    /* Timeout Control Register */
+#define TOSR_OFFSET       0x5C    /* Timeout Status Register */
 
-/* Debug logging */
-#define UART_DEBUG 0
-#if UART_DEBUG
-#define DPRINTF(fmt, ...) \
-    fprintf(stderr, "s32k3x8_lpuart: " fmt, ## __VA_ARGS__)
-#else
-#define DPRINTF(fmt, ...) do {} while (0)
-#endif
+/* Bit field definitions for key registers */
+/* GLOBAL Register */
+#define GLOBAL_RST        (1 << 0)    /* Software Reset */
+#define GLOBAL_ENABLE     (1 << 1)    /* UART Enable */
 
-static void s32k3x8_lpuart_update_irq(S32K3X8LPUARTState *s)
+/* CTRL Register */
+#define CTRL_TE          (1 << 19)    /* 发送使能 - 位19，与RM匹配 */
+#define CTRL_RE          (1 << 18)    /* 接收使能 - 位18，与RM匹配 */
+
+/* FIFO Register */
+#define FIFO_TXFE        (1 << 0)     /* Transmit FIFO Empty */
+#define FIFO_RXFF        (1 << 1)     /* Receive FIFO Full */
+#define FIFO_TXOF        (1 << 2)     /* Transmit FIFO Overflow */
+#define FIFO_RXUF        (1 << 3)     /* Receive FIFO Underflow */
+
+/* STAT Register bits */
+#define STAT_RDRF        (1 << 21)    /* Receive Data Register Full */
+#define STAT_BRK13       (1 << 16)    /* Break Character Detected */
+
+/* LPUART 寄存器结构体定义 */
+typedef struct {
+    uint32_t verid;    /* 版本ID寄存器 */
+    uint32_t param;    /* 参数寄存器 */
+    uint32_t global;   /* 全局寄存器 */
+    uint32_t pincfg;   /* 引脚配置寄存器 */
+    uint32_t baud;     /* 波特率寄存器 */
+    uint32_t stat;     /* 状态寄存器 */
+    uint32_t ctrl;     /* 控制寄存器 */
+    uint32_t data;     /* 数据寄存器 */
+    uint32_t match;    /* 匹配地址寄存器 */
+    uint32_t modir;    /* MODEM IrDA寄存器 */
+    uint32_t fifo;     /* FIFO寄存器 */
+    uint32_t water;    /* 水位寄存器 */
+    uint32_t dataro;   /* 只读数据寄存器 */
+    uint32_t mcr;      /* MODEM控制寄存器 */
+    uint32_t msr;      /* MODEM状态寄存器 */
+    uint32_t reir;     /* 接收器扩展空闲寄存器 */
+    uint32_t teir;     /* 发送器扩展空闲寄存器 */
+    uint32_t hdcr;     /* 半双工控制寄存器 */
+    uint32_t tocr;     /* 超时控制寄存器 */
+    uint32_t tosr;     /* 超时状态寄存器 */
+} LPUART_reg;
+
+/* FIFO结构体定义 */ 
+typedef struct {
+    uint8_t *data;
+    uint32_t sp, rp;
+    uint32_t size; 
+} FIFO_LPUART;
+
+OBJECT_DECLARE_SIMPLE_TYPE(S32E8_LPUART_state, S32E8_LPUART)
+
+/*函数声明*/
+//========================================================================
+static uint64_t S32E8_LPUART_read(void *opaque, hwaddr addr, unsigned size);
+static void S32E8_LPUART_write(void *opaque, hwaddr addr, uint64_t val, unsigned size);
+static void S32E8_LPUART_reset(DeviceState *dev);
+static int S32E8_LPUART_can_receive(void *opaque);
+static void S32E8_LPUART_receive(void *opaque, const uint8_t *buf, int size);
+static void S32E8_LPUART_event(void *opaque, QEMUChrEvent event);
+
+//数据结构定义
+struct S32E8_LPUART_state
 {
-    bool irq_state = false;
+    SysBusDevice parent_obj;  //systembus 设备
+    MemoryRegion iomem;
+    CharBackend chr;
+    qemu_irq irq;
 
-    if ((s->ctrl & S32K3X8_LPUART_CTRL_RXIE) && 
-        (s->stat & S32K3X8_LPUART_STAT_RXRDY)) {
-        irq_state = true;
-    }
+    uint32_t instance_ID; // RM: 0-15
+    uint32_t base_addr;
+    
+    FIFO_LPUART rx;
+    FIFO_LPUART tx;
 
-    if ((s->ctrl & S32K3X8_LPUART_CTRL_TXIE) && 
-        (s->stat & S32K3X8_LPUART_STAT_TXRDY)) {
-        irq_state = true;
-    }
-
-    qemu_set_irq(s->irq, irq_state);
-    DPRINTF("IRQ state changed to %d\n", irq_state);
-}
-
-static const VMStateDescription vmstate_s32k3x8_lpuart = {
-    .name = "s32k3x8-lpuart",
-    .version_id = 1,
-    .minimum_version_id = 1,
-    .fields = (VMStateField[]) {
-        VMSTATE_UINT8(instance_id, S32K3X8LPUARTState),
-        VMSTATE_UINT32(verid, S32K3X8LPUARTState),
-        VMSTATE_UINT32(param, S32K3X8LPUARTState),
-        VMSTATE_UINT32(global, S32K3X8LPUARTState),
-        VMSTATE_UINT32(pincfg, S32K3X8LPUARTState),
-        VMSTATE_UINT32(baud, S32K3X8LPUARTState),
-        VMSTATE_UINT32(stat, S32K3X8LPUARTState),
-        VMSTATE_UINT32(ctrl, S32K3X8LPUARTState),
-        VMSTATE_UINT32(data, S32K3X8LPUARTState),
-        VMSTATE_UINT32(match, S32K3X8LPUARTState),
-        VMSTATE_UINT32(modir, S32K3X8LPUARTState),
-        VMSTATE_UINT32(fifo, S32K3X8LPUARTState),
-        VMSTATE_UINT32(water, S32K3X8LPUARTState),
-        VMSTATE_UINT32(dataro, S32K3X8LPUARTState),
-        VMSTATE_UINT32(mcr, S32K3X8LPUARTState),
-        VMSTATE_UINT32(msr, S32K3X8LPUARTState),
-        VMSTATE_UINT32(reir, S32K3X8LPUARTState),
-        VMSTATE_UINT32(teir, S32K3X8LPUARTState),
-        VMSTATE_UINT32(hdcr, S32K3X8LPUARTState),
-        VMSTATE_UINT32(tocr, S32K3X8LPUARTState),
-        VMSTATE_UINT32(tosr, S32K3X8LPUARTState),
-        VMSTATE_UINT32_ARRAY(timeout, S32K3X8LPUARTState, 4),
-        VMSTATE_UINT32_ARRAY(tcbr, S32K3X8LPUARTState, 128),
-        VMSTATE_UINT32_ARRAY(tdbr, S32K3X8LPUARTState, 256),
-        VMSTATE_END_OF_LIST()
-    }
+    LPUART_reg regs; 
 };
 
-static uint64_t s32k3x8_lpuart_read(void *opaque, hwaddr offset, unsigned size)
-{
-    S32K3X8LPUARTState *s = (S32K3X8LPUARTState *)opaque;
-    uint32_t value = 0;
+//结构化初始化语法 c99引入的特性
+//=========================================================================
+static const MemoryRegionOps S32E8_LPUART_OPS = {
+    .read = S32E8_LPUART_read,
+    .write = S32E8_LPUART_write,
+    .endianness = DEVICE_LITTLE_ENDIAN,
 
-    if (!(s->global & S32K3X8_LPUART_GLOBAL_EN)) {
-        qemu_log_mask(LOG_GUEST_ERROR,
-                     "s32k3x8_lpuart: Read while LPUART disabled, offset %"HWADDR_PRIx"\n",
-                     offset);
-        return 0;
-    }
-
-    switch (offset) {
-    case S32K3X8_LPUART_VERID:
-        value = s->verid;
-        break;
-    case S32K3X8_LPUART_PARAM:
-        value = s->param;
-        break;
-    case S32K3X8_LPUART_GLOBAL:
-        value = s->global;
-        break;
-    case S32K3X8_LPUART_PINCFG:
-        value = s->pincfg;
-        break;
-    case S32K3X8_LPUART_BAUD:
-        value = s->baud;
-        break;
-    case S32K3X8_LPUART_STAT:
-        value = s->stat;
-        break;
-    case S32K3X8_LPUART_CTRL:
-        value = s->ctrl;
-        break;
-    case S32K3X8_LPUART_DATA:
-        value = s->data;
-        if (s->stat & S32K3X8_LPUART_STAT_RXRDY) {
-            s->stat &= ~S32K3X8_LPUART_STAT_RXRDY;
-            s32k3x8_lpuart_update_irq(s);
-        }
-        break;
-    case S32K3X8_LPUART_MATCH:
-        value = s->match;
-        break;
-    case S32K3X8_LPUART_MODIR:
-        value = s->modir;
-        break;
-    case S32K3X8_LPUART_FIFO:
-        value = s->fifo;
-        break;
-    case S32K3X8_LPUART_WATER:
-        value = s->water;
-        break;
-    case S32K3X8_LPUART_DATARO:
-        value = s->dataro;
-        break;
-    case S32K3X8_LPUART_MCR:
-        value = s->mcr;
-        break;
-    case S32K3X8_LPUART_MSR:
-        value = s->msr;
-        break;
-    case S32K3X8_LPUART_REIR:
-        value = s->reir;
-        break;
-    case S32K3X8_LPUART_TEIR:
-        value = s->teir;
-        break;
-    case S32K3X8_LPUART_HDCR:
-        value = s->hdcr;
-        break;
-    case S32K3X8_LPUART_TOCR:
-        value = s->tocr;
-        break;
-    case S32K3X8_LPUART_TOSR:
-        value = s->tosr;
-        break;
-    default:
-        if (offset >= S32K3X8_LPUART_TIMEOUT0 && 
-            offset < S32K3X8_LPUART_TIMEOUT0 + 0x10) {
-            value = s->timeout[(offset - S32K3X8_LPUART_TIMEOUT0) >> 2];
-        } else if (offset >= S32K3X8_LPUART_TCBR0 && 
-                   offset < S32K3X8_LPUART_TCBR0 + 0x200) {
-            value = s->tcbr[(offset - S32K3X8_LPUART_TCBR0) >> 2];
-        } else if (offset >= S32K3X8_LPUART_TDBR0 && 
-                   offset < S32K3X8_LPUART_TDBR0 + 0x400) {
-            value = s->tdbr[(offset - S32K3X8_LPUART_TDBR0) >> 2];
-        } else {
-            qemu_log_mask(LOG_GUEST_ERROR,
-                         "s32k3x8_lpuart: Bad read offset %"HWADDR_PRIx"\n", 
-                         offset);
-        }
-    }
-DPRINTF("Read: offset=%"HWADDR_PRIx" value=0x%x\n", offset, value);
-    return value;
-}
-
-
-static void s32k3x8_lpuart_write(void *opaque, hwaddr offset,
-                              uint64_t value, unsigned size)
-{
-    S32K3X8LPUARTState *s = (S32K3X8LPUARTState *)opaque;
-
-    DPRINTF("Write: offset=%"HWADDR_PRIx" value=0x%"PRIx64"\n", offset, value);
-
-    if (!(s->global & S32K3X8_LPUART_GLOBAL_EN) && 
-        offset != S32K3X8_LPUART_GLOBAL) {
-        qemu_log_mask(LOG_GUEST_ERROR,
-                     "s32k3x8_lpuart: Write while LPUART disabled, offset %"HWADDR_PRIx"\n",
-                     offset);
-        return;
-    }
-
-    switch (offset) {
-    case S32K3X8_LPUART_GLOBAL:
-        s->global = value;
-        if (value & S32K3X8_LPUART_GLOBAL_RST) {
-            device_cold_reset(DEVICE(s));
-        }
-        break;
-    case S32K3X8_LPUART_PINCFG:
-        s->pincfg = value;
-        break;
-    case S32K3X8_LPUART_BAUD:
-        s->baud = value;
-        break;
-    case S32K3X8_LPUART_STAT:
-        /* Write-1-to-clear error flags */
-        s->stat &= ~(value & S32K3X8_LPUART_STAT_ERR_MASK);
-        s32k3x8_lpuart_update_irq(s);
-        break;
-    case S32K3X8_LPUART_CTRL:
-        s->ctrl = value;
-        s32k3x8_lpuart_update_irq(s);
-        break;
-    case S32K3X8_LPUART_DATA:
-        s->data = value;
-        if (qemu_chr_fe_backend_connected(&s->chr)) {
-            uint8_t ch = value & 0xFF;
-            qemu_chr_fe_write(&s->chr, &ch, 1);
-        }
-        /* Set TXRDY after transmission */
-        s->stat |= S32K3X8_LPUART_STAT_TXRDY;
-        s32k3x8_lpuart_update_irq(s);
-        break;
-    case S32K3X8_LPUART_MATCH:
-        s->match = value;
-        break;
-    case S32K3X8_LPUART_MODIR:
-        s->modir = value;
-        break;
-    case S32K3X8_LPUART_FIFO:
-        s->fifo = value;
-        break;
-    case S32K3X8_LPUART_WATER:
-        s->water = value;
-        break;
-    case S32K3X8_LPUART_MCR:
-        s->mcr = value;
-        break;
-    case S32K3X8_LPUART_MSR:
-        s->msr = value;
-        break;
-    case S32K3X8_LPUART_REIR:
-        s->reir = value;
-        break;
-    case S32K3X8_LPUART_TEIR:
-        s->teir = value;
-        break;
-    case S32K3X8_LPUART_HDCR:
-        s->hdcr = value;
-        break;
-    case S32K3X8_LPUART_TOCR:
-        s->tocr = value;
-        break;
-    case S32K3X8_LPUART_TOSR:
-        s->tosr = value;
-        break;
-    default:
-        if (offset >= S32K3X8_LPUART_TIMEOUT0 && 
-            offset < S32K3X8_LPUART_TIMEOUT0 + 0x10) {
-            s->timeout[(offset - S32K3X8_LPUART_TIMEOUT0) >> 2] = value;
-        } else if (offset >= S32K3X8_LPUART_TCBR0 && 
-                   offset < S32K3X8_LPUART_TCBR0 + 0x200) {
-            s->tcbr[(offset - S32K3X8_LPUART_TCBR0) >> 2] = value;
-        } else if (offset >= S32K3X8_LPUART_TDBR0 && 
-                   offset < S32K3X8_LPUART_TDBR0 + 0x400) {
-            s->tdbr[(offset - S32K3X8_LPUART_TDBR0) >> 2] = value;
-        } else {
-            qemu_log_mask(LOG_GUEST_ERROR,
-                         "s32k3x8_lpuart: Bad write offset %"HWADDR_PRIx"\n",
-                         offset);
-        }
-    }
-}
-
-static const MemoryRegionOps s32k3x8_lpuart_ops = {
-    .read = s32k3x8_lpuart_read,
-    .write = s32k3x8_lpuart_write,
-    .endianness = DEVICE_NATIVE_ENDIAN,
-    .valid = {
-        .min_access_size = 4,
+    //RM: 4668/5253 page align limit
+    .impl = {
+        .min_access_size = 1,
         .max_access_size = 4,
     },
+
+    .valid = {
+        .min_access_size = 1,
+        .max_access_size = 4,
+    }
 };
 
-static void s32k3x8_lpuart_reset(DeviceState *dev)
-{
-    S32K3X8LPUARTState *s = S32K3X8_LPUART(dev);
-    
-    /* Set reset values based on instance ID */
-    if (s->instance_id <= 1) {
-        s->verid = S32K3X8_LPUART_VERID_RESET01;  /* VERID for LPUART0/1 */
-        s->param = S32K3X8_LPUART_PARAM_RESET01;  /* PARAM for LPUART0/1 */
-        s->fifo = S32K3X8_LPUART_FIFO_RESET01;   /* FIFO for LPUART0/1 */
-    } else {
-        s->verid = S32K3X8_LPUART_VERID_RESET;   /* VERID for LPUART2-15 */
-        s->param = S32K3X8_LPUART_PARAM_RESET;   /* PARAM for LPUART2-15 */
-        s->fifo = S32K3X8_LPUART_FIFO_RESET;     /* FIFO for LPUART2-15 */
-    }
-
-    /* Common reset values for all instances */
-    s->global = 0x00000000;    /* Global */
-    s->pincfg = 0x00000000;    /* Pin Configuration */
-    s->baud = 0x0F000004;      /* Baud Rate */
-    s->stat = 0x00C00000;      /* Status */
-    s->ctrl = 0x00000000;      /* Control */
-    s->data = 0x00001000;      /* Data */
-    s->match = 0x00000000;     /* Match Address */
-    s->modir = 0x00000000;     /* MODEM IrDA */
-    s->water = 0x00000000;     /* Watermark */
-    s->dataro = 0x00001000;    /* Data Read-Only */
-    s->mcr = 0x00000000;       /* MODEM Control */
-    s->msr = 0x00000000;       /* MODEM Status */
-    s->reir = 0x00000000;      /* Receiver Extended Idle */
-    s->teir = 0x00000000;      /* Transmitter Extended Idle */
-    s->hdcr = 0x00000000;      /* Half Duplex Control */
-    s->tocr = 0x00000000;      /* Timeout Control */
-    s->tosr = 0x0000000F;      /* Timeout Status */
-    
-    memset(s->timeout, 0, sizeof(s->timeout));
-    memset(s->tcbr, 0, sizeof(s->tcbr));
-    memset(s->tdbr, 0, sizeof(s->tdbr));
-
-    s32k3x8_lpuart_update_irq(s);
-}
-
-static int s32k3x8_lpuart_can_receive(void *opaque)
-{
-    S32K3X8LPUARTState *s = (S32K3X8LPUARTState *)opaque;
-    return !(s->stat & S32K3X8_LPUART_STAT_RXRDY) && 
-           (s->ctrl & S32K3X8_LPUART_CTRL_RX_EN);
-}
-
-static void s32k3x8_lpuart_receive(void *opaque, const uint8_t *buf, int size)
-{
-    S32K3X8LPUARTState *s = (S32K3X8LPUARTState *)opaque;
-    
-    if (!(s->ctrl & S32K3X8_LPUART_CTRL_RX_EN)) {
-        return;
-    }
-
-    s->data = *buf;
-    s->stat |= S32K3X8_LPUART_STAT_RXRDY;
-    s32k3x8_lpuart_update_irq(s);
-}
-
-static void s32k3x8_lpuart_realize(DeviceState *dev, Error **errp)
-{
-	
-    printf("realize!\n");
-    S32K3X8LPUARTState *s = S32K3X8_LPUART(dev);
-    SysBusDevice *sbd = SYS_BUS_DEVICE(dev);
-    printf("Device pointer: %p\n", dev);
-printf("State pointer: %p\n", s);
-printf("SysBus pointer: %p\n", sbd);
-    if (!s || !sbd) {
-        printf("Failed to initialize LPUART device!\n");
-        return;
-    }
-
-
-    memory_region_init_io(&s->iomem, OBJECT(s), &s32k3x8_lpuart_ops, s,
-                         TYPE_S32K3X8_LPUART, 0x1000);
-    sysbus_init_mmio(sbd, &s->iomem);
-    sysbus_init_irq(sbd, &s->irq);
-
-    qemu_chr_fe_set_handlers(&s->chr, s32k3x8_lpuart_can_receive,
-                            s32k3x8_lpuart_receive, NULL, NULL,
-                            s, NULL, true);
-}
-
-static Property s32k3x8_lpuart_properties[] = {
-    DEFINE_PROP_UINT8("instance", S32K3X8LPUARTState, instance_id, 0),
-    DEFINE_PROP_CHR("chardev", S32K3X8LPUARTState, chr),
+static Property S32E8_LPUART_properties[] = {
+    DEFINE_PROP_CHR("chardev", S32E8_LPUART_state, chr),
+    DEFINE_PROP_UINT32("lpuart_id", S32E8_LPUART_state, instance_ID, 0),
+    DEFINE_PROP_UINT32("rx-size", S32E8_LPUART_state, rx.size, 16),
+    DEFINE_PROP_UINT32("tx-size", S32E8_LPUART_state, tx.size, 16),
     DEFINE_PROP_END_OF_LIST(),
 };
 
-static void s32k3x8_lpuart_class_init(ObjectClass *klass, void *data)
+
+/*具体实现函数 */
+//==========================================================================
+
+static void S32E8_LPUART_reset(DeviceState *dev)
+{
+    S32E8_LPUART_state *s = S32E8_LPUART(dev);
+    
+    // Reset registers to default values
+    s->regs.verid = 0x0;          // Implementation specific
+    s->regs.param = 0x0;          // Implementation specific
+    s->regs.global = 0x00000000;
+    s->regs.pincfg = 0x00000000;
+    s->regs.baud = 0x0F000004;
+    s->regs.stat = 0x00C00000;
+    s->regs.ctrl = 0x00000000;
+    s->regs.data = 0x00001000;
+    s->regs.match = 0x00000000;
+    s->regs.modir = 0x00000000;
+    s->regs.fifo = 0x0;           // Implementation specific
+    s->regs.water = 0x00000000;
+    s->regs.dataro = 0x00001000;
+    s->regs.mcr = 0x00000000;
+    s->regs.msr = 0x00000000;
+    s->regs.reir = 0x00000000;
+    s->regs.teir = 0x00000000;
+    s->regs.hdcr = 0x00000000;
+    s->regs.tocr = 0x00000000;
+    s->regs.tosr = 0x0000000F;
+
+    s->base_addr = 0x40000000;
+    s->instance_ID = 0;
+}
+
+// 简化版的FIFO reset函数
+static void fifo_reset(FIFO_LPUART *q) {
+    if (q->data == NULL && q->size > 0) {
+        q->data = g_malloc0(q->size);
+    } else if (q->data != NULL && q->size > 0) {
+        memset(q->data, 0, q->size);
+    }
+    q->sp = q->rp = 0;
+}
+
+static void S32E8_LPUART_instance_init(Object *obj)
+{
+    SysBusDevice *dev = SYS_BUS_DEVICE(obj);
+    S32E8_LPUART_state *s = S32E8_LPUART(obj);
+
+    memory_region_init_io(&s->iomem, obj, &S32E8_LPUART_OPS, s,
+                          TYPE_S32E8_LPUART, S32E8_LPUART_REGS_MEM_SIZE);
+    sysbus_init_mmio(dev, &s->iomem);
+    sysbus_init_irq(dev, &s->irq);
+}
+
+static void S32E8_LPUART_realize(DeviceState *dev, Error **errp)
+{
+    S32E8_LPUART_state *s = S32E8_LPUART(dev);
+
+    // 先执行重置，初始化所有寄存器
+    S32E8_LPUART_reset(dev);
+
+    qemu_chr_fe_set_handlers(
+        &s->chr,
+        S32E8_LPUART_can_receive,
+        S32E8_LPUART_receive,
+        S32E8_LPUART_event,
+        NULL,
+        s,
+        NULL,
+        true
+    );
+    
+    // 初始化FIFO
+    fifo_reset(&s->rx);
+    fifo_reset(&s->tx);
+}
+
+// 简化版read函数 - 暂不实现
+static uint64_t S32E8_LPUART_read(void *opaque, hwaddr addr, unsigned size) {
+    S32E8_LPUART_state *s = (S32E8_LPUART_state *)opaque;
+    uint64_t ret = 0;
+    
+    // 简单返回对应寄存器值
+    switch (addr) {
+    case DATA_OFFSET:
+        ret = s->regs.data;
+        break;
+    case CTRL_OFFSET:
+        ret = s->regs.ctrl;
+        break;
+    case GLOBAL_OFFSET:
+        ret = s->regs.global;
+        break;
+    default:
+        // 其他寄存器可以根据需要添加
+        break;
+    }
+    
+    return ret;
+}
+
+// write函数 - 重点实现DATA寄存器写入到QEMU后端的功能
+static void S32E8_LPUART_write(void *opaque, hwaddr addr, uint64_t val, unsigned size) 
+{
+    S32E8_LPUART_state *s = (S32E8_LPUART_state *)opaque;
+
+    switch (addr) {
+    case GLOBAL_OFFSET:
+        if (val & GLOBAL_RST) {
+            // 软件复位
+            S32E8_LPUART_reset(DEVICE(s));
+            // 清除复位标志
+            val &= ~GLOBAL_RST;
+        }
+        s->regs.global = val;
+        break;
+        
+    case CTRL_OFFSET:
+        s->regs.ctrl = val;
+        break;
+        
+     case DATA_OFFSET:
+        s->regs.data = val;
+        // 关键功能：当发送使能且有字符设备连接时，写入字符到QEMU后端
+        if ((s->regs.ctrl & CTRL_TE) && qemu_chr_fe_backend_connected(&s->chr)) {
+            uint8_t ch = val & 0xFF;
+            qemu_chr_fe_write(&s->chr, &ch, 1);
+            error_report("LPUART: Sent char '%c' (0x%02x) to chardev", 
+                   isprint(ch) ? ch : '.', ch);
+        } else {
+            error_report("LPUART: Failed to send char - TE=%d, connected=%d", 
+                   (s->regs.ctrl & CTRL_TE) ? 1 : 0,
+                   qemu_chr_fe_backend_connected(&s->chr) ? 1 : 0);
+        }
+        break;
+	
+    default:
+        // 其他寄存器写入暂不处理，或者根据需要添加
+        break;
+    }
+}
+
+// 简化版can_receive函数
+static int S32E8_LPUART_can_receive(void *opaque) {
+    S32E8_LPUART_state *s = (S32E8_LPUART_state *)opaque;
+    
+    // 只检查接收使能
+    if (!(s->regs.ctrl & CTRL_RE)) {
+        return 0;
+    }
+    
+    // 返回固定值，简化实现
+    return 1;
+}
+
+// 简化版receive函数
+static void S32E8_LPUART_receive(void *opaque, const uint8_t *buf, int size) {
+    // 暂不实现接收功能
+}
+
+// 简化版event函数
+static void S32E8_LPUART_event(void *opaque, QEMUChrEvent event) {
+    // 暂不处理事件
+}
+
+static void S32E8_LPUART_class_init(ObjectClass *klass, void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
-     if (!dc) {
-        printf("Failed to initialize device class");
-        return;
-    }
-     printf("class_init!\n");
-    dc->realize = s32k3x8_lpuart_realize;
-    printf("Setting realize function: %p\n", s32k3x8_lpuart_realize);
-    printf("finish_realize!\n");
-    device_class_set_legacy_reset(dc, s32k3x8_lpuart_reset);
-    printf("finish reset!\n");
-    device_class_set_props(dc, s32k3x8_lpuart_properties);
-     printf("finish properties!\n");
-    dc->vmsd = &vmstate_s32k3x8_lpuart;
-     printf("finish class_init!\n");
-
-
+    
+    /* 只设置必要的 realize 函数，reset 在 realize 中调用 */
+    dc->realize = S32E8_LPUART_realize;
+    device_class_set_props(dc, S32E8_LPUART_properties);
 }
-static const TypeInfo s32k3x8_lpuart_info = {
-    .name          = TYPE_S32K3X8_LPUART,
-    .parent        = TYPE_SYS_BUS_DEVICE,
-    .instance_size = sizeof(S32K3X8LPUARTState),
-    .class_size    = sizeof(S32K3X8LPUARTClass),
-    .class_init    = s32k3x8_lpuart_class_init,
+
+static const TypeInfo S32E8_LPUART_info = {
+    .name = TYPE_S32E8_LPUART,
+    .parent = TYPE_SYS_BUS_DEVICE,
+    .instance_size = sizeof(S32E8_LPUART_state),
+    .instance_init = S32E8_LPUART_instance_init,
+    .class_init = S32E8_LPUART_class_init,
 };
 
-
-void s32k3x8_lpuart_register_types(void)
+static void S32E8_LPUART_register_types(void)
 {
-	printf("Registering S32K3X8EVB uart type!\n");
-
-    type_register_static(&s32k3x8_lpuart_info); 
-    printf("Registeration complete S32K3X8EVB uart type!\n");
-
+    type_register_static(&S32E8_LPUART_info);
 }
 
-type_init(s32k3x8_lpuart_register_types)
+type_init(S32E8_LPUART_register_types);
