@@ -1,7 +1,7 @@
 #include<stdint.h>
 
 typedef void (*pFunc)(void);
-
+/**/
 /* External declaration of the entry point and system functions */
 extern void __PROGRAM_START(void);
 extern void SystemInit(void);
