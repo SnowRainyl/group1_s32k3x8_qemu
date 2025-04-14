@@ -1,4 +1,4 @@
-#include "S32K358.h"
+#include<stdint.h>
 
 typedef void (*pFunc)(void);
 
@@ -17,6 +17,11 @@ extern uint32_t __bss_end__;
 extern uint32_t __HeapLimit;
 extern uint32_t __StackLimit;
 extern int main(void);
+
+/*extern freertos handler functions*/
+extern void vPortSVCHandler(void);
+extern void xPortPendSVHandler(void);
+extern void xPortSysTickHandler(void);
 
 void Reset_Handler(void) __attribute__((naked, noreturn));
 void Default_Handler(void);
@@ -45,11 +50,11 @@ const pFunc __VECTOR_TABLE[] = {
   BusFault_Handler,            /* BusFault Handler */
   UsageFault_Handler,          /* UsageFault Handler */
   0, 0, 0, 0,                  /* Reserved */
-  SVC_Handler,                 /* change to freertos SVCall Handler */
+  vPortSVCHandler,                 /* change to freertos SVCall Handler */
   DebugMon_Handler,            /* Debug Monitor Handler */
   0,                           /* Reserved */
-  PendSV_Handler,              /* change to freertos PendSV Handler */
-  SysTick_Handler,             /* change to freertos SysTick Handler */
+  xPortPendSVHandler,              /* change to freertos PendSV Handler */
+  xPortSysTickHandler,             /* change to freertos SysTick Handler */
 
   // Interrupts
   INT0_Handler,

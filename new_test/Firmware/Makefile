@@ -9,7 +9,7 @@ OBJCOPY = $(TOOLCHAIN)objcopy
 SIZE = $(TOOLCHAIN)size
 
 # Directories
-FREERTOS_ROOT := FreeRTOS/FreeRTOS
+FREERTOS_ROOT := ../FreeRTOS/FreeRTOS
 KERNEL_DIR := $(FREERTOS_ROOT)/Source
 KERNEL_PORT_DIR := $(KERNEL_DIR)/portable/GCC/ARM_CM7/r0p1
 
@@ -17,6 +17,7 @@ KERNEL_PORT_DIR := $(KERNEL_DIR)/portable/GCC/ARM_CM7/r0p1
 INCLUDES = \
     -I$(KERNEL_DIR)/include \
     -I$(KERNEL_PORT_DIR) \
+    -I ../Headers \
     -I. \
     -I./config
 
@@ -45,7 +46,7 @@ ASFLAGS = $(COMMON_FLAGS) $(FPU_FLAGS)
 LDFLAGS = $(COMMON_FLAGS) $(FPU_FLAGS) \
     -Wl,--gc-sections \
     -nostartfiles \
-    -T linker_flash_s32k358.ld \
+    -T flash_link.ld\
     -specs=nano.specs \
     -specs=nosys.specs \
     -Wl,--start-group -lc -lm -Wl,--end-group
@@ -53,8 +54,8 @@ LDFLAGS = $(COMMON_FLAGS) $(FPU_FLAGS) \
 # Source files
 SRC_C = \
     main.c \
-    startup.c \
-    systemcall.c
+    startup_ARMCM7.c\
+    system_ARMCM7.c
 
 # FreeRTOS source files
 FREERTOS_SRC = \
@@ -66,8 +67,7 @@ FREERTOS_SRC = \
     $(KERNEL_PORT_DIR)/port.c
 
 # Assembly sources
-SRC_ASM = \
-    startup_cm7.s
+# none
 
 # Object files
 OBJS = $(SRC_C:.c=.o) $(SRC_ASM:.s=.o) $(FREERTOS_SRC:.c=.o)
