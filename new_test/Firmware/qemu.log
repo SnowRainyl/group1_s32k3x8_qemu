@@ -1,0 +1,27 @@
+Initializing S32K3X8EVB board
+
+------------------ Initialization of the memory regions ------------------
+Initializing ITCM...
+Initializing DTCM...
+Initializing Program Flash...
+Initializing Data Flash...
+Initializing SRAM regions...
+Memory regions initialized successfully.
+Created memory alias from PFLASH to ITCM (addr 0)
+Loading firmware to PFLASH, size: 4195856 bytes
+Vector table after loading (in PFLASH):
+Initial SP: 0x20440000
+Reset Vector: 0x00400085
+First 32 bytes of firmware:
+00 00 44 20 85 00 40 00 d1 00 40 00 d1 00 40 00 
+d1 00 40 00 d1 00 40 00 d1 00 40 00 00 00 00 00 
+Initial SP at ITCM alias (addr 0): 0x20440000 (should match PFLASH)
+CPU Reset (CPU 0)
+R00=00000000 R01=00000000 R02=00000000 R03=00000000
+R04=00000000 R05=00000000 R06=00000000 R07=00000000
+R08=00000000 R09=00000000 R10=00000000 R11=00000000
+R12=00000000 R13=00000000 R14=00000000 R15=00000000
+XPSR=40000000 -Z-- A priv-thread
+Loaded reset SP 0x20440000 PC 0x400085 from vector table
+Initializing UART
+S32K3X8EVB board initialization complete
