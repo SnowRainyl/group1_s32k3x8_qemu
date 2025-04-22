@@ -31,7 +31,7 @@
 #elif defined (ARMCM7_DP)
   #include "ARMCM7_DP.h"
 #else
-  #error device not specified!
+ // #error device not specified!
 #endif
 
 /*----------------------------------------------------------------------------
@@ -41,7 +41,7 @@
 
 #define  SYSTEM_CLOCK    (XTAL / 2U)
 
-
+#include <stdint.h>
 /*----------------------------------------------------------------------------
   Externals
  *----------------------------------------------------------------------------*/

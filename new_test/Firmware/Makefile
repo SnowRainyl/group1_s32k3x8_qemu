@@ -32,9 +32,11 @@ FPU_FLAGS = -mfpu=$(FPU) -mfloat-abi=$(FLOAT_ABI)
 
 # Compiler flags
 CFLAGS = $(COMMON_FLAGS) $(FPU_FLAGS) \
-    -O2 \
+    -O0 \
     -Wall -Wextra \
     -ffunction-sections -fdata-sections \
+    -g3\
+    -DARMCM7 \
     -MMD -MP \
     -D__FPU_PRESENT=1 \
     -D__FPU_USED=1

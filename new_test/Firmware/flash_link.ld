@@ -35,8 +35,8 @@ MEMORY
   M7_0_PFLASH (RX)      : ORIGIN = 0x00400000, LENGTH = 0x200000
   M7_0_DFLASH (RX)      : ORIGIN = 0x10000000, LENGTH = 0xC000
   M7_0_SRAM   (RW)      : ORIGIN = 0x20410000, LENGTH = 0x30000
-//enventhough the cortex m7 shows that 358 doesn't include core1 instance but in physical it include. because core1 work together with core0, it means them be seen as a logic unit due to lockstep mechanism .
-//锁步模式是一种安全机制，其中两个核心执行完全相同的指令，然后比较结果以检测任何错误。从功能角度看，这被视为单个处理器核心（因为两个核心一起工作作为一个逻辑单元），这就是为什么实例表显示CM7_1为"No"。 
+/*//enventhough the cortex m7 shows that 358 doesn't include core1 instance but in physical it include. because core1 work together with core0, it means them be seen as a logic unit due to lockstep mechanism .
+//锁步模式是一种安全机制，其中两个核心执行完全相同的指令，然后比较结果以检测任何错误。从功能角度看，这被视为单个处理器核心（因为两个核心一起工作作为一个逻辑单元），这就是为什么实例表显示CM7_1为"No"。 */
   M7_1_PFLASH (RX)      : ORIGIN = 0x00600000, LENGTH = 0x200000
   M7_1_DFLASH (RX)      : ORIGIN = 0x1000C000, LENGTH = 0xA000
   M7_1_SRAM   (RW)      : ORIGIN = 0x20440000, LENGTH = 0x40000
@@ -78,21 +78,22 @@ ENTRY(Reset_Handler)
 
 SECTIONS
 {
-  .vectors://begin at 0x0 address
+	/*begin at 0x0 address*/
+  .vectors :
   {
-    KEEP(*(.vectors)) //'keep' keyword prevents compiler optimize this when them not cited by code.
+    KEEP(*(.vectors)) /*'keep' keyword prevents compiler optimize this when them not cited by code.*/
 
   } > ITCM
 
   .text :
   {
     *(.text*)
-    KEEP(*(.init))//usually generate by compiler, program init code
-    KEEP(*(.fini))//program finish init code
+    KEEP(*(.init))/*usually generate by compiler, program init code*/
+    KEEP(*(.fini))/*program finish init code*/
 
     /* .ctors */
     /*place the constructor table in crtbegin.o*/
-    *crtbegin.o(.ctors)// If our code doesn't include that exception code, the compiler will handle this perfectly, so putting them in here is fine.
+    *crtbegin.o(.ctors)/*If our code doesn't include that exception code, the compiler will handle this perfectly, so putting them in here is fine.*/
     *crtbegin?.o(.ctors)
     *(EXCLUDE_FILE(*crtend?.o *crtend.o) .ctors)
     *(SORT(.ctors.*))
@@ -106,13 +107,13 @@ SECTIONS
      *(.dtors)
 
     *(.rodata*)
-    KEEP(*(.eh_frame*))//exception handling frame
-  } > M7_0_PFLASH  //puts entire .text segment into M7_0PFLASH memory region
+    KEEP(*(.eh_frame*))/*exception handling frame*/
+  } > M7_0_PFLASH  /*puts entire .text segment into M7_0PFLASH memory region*/
 
-  .ARM.extab :  // If our code doesn't include that exception code, the compiler will handle this perfectly, so putting them in here is fine.
+  .ARM.extab :  /*If our code doesn't include that exception code, the compiler will handle this perfectly, so putting them in here is fine.*/
   {
     *(.ARM.extab* .gnu.linkonce.armextab.*)
-  } > M7_0_PFLASH  //Puts those segments one by one in order, due to they decide to put multiple segments to the same memory region M7_0_PFLASH
+  } > M7_0_PFLASH  /*Puts those segments one by one in order, due to they decide to put multiple segments to the same memory region M7_0_PFLASH*/
 
   __exidx_start = .;
   .ARM.exidx :
@@ -253,8 +254,8 @@ SECTIONS
   /* Due ECC initialization sequence __StackLimit and __StackTop should be aligned on 8 bytes */
   .stack (ORIGIN(M7_0_SRAM) + LENGTH(M7_0_SRAM) - __STACK_SIZE) (COPY) :
   {
-    . = ALIGN(8);//Rounds up to the next address divisible by 8
-    __StackLimit = .;//This line assigns the value of the current position to the symbol __StackLimit, which marks the starting position of the stack space (i.e., the lower boundary of the stack).
+    . = ALIGN(8);/*Rounds up to the next address divisible by 8*/
+    __StackLimit = .; /*This line assigns the value of the current position to the symbol __StackLimit, which marks the starting position of the stack space (i.e., the lower boundary of the stack).*/
     . = . + __STACK_SIZE;
     . = ALIGN(8);
     __StackTop = .;

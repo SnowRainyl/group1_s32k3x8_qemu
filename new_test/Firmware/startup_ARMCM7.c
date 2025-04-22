@@ -5,7 +5,7 @@ typedef void (*pFunc)(void);
 /* External declaration of the entry point and system functions */
 extern void __PROGRAM_START(void);
 extern void SystemInit(void);
-extern uint32_t __INITIAL_SP;
+extern uint32_t __stack;
 
 extern uint32_t __data_start__;
 extern uint32_t __data_end__;
@@ -42,7 +42,7 @@ void INT1_Handler(void)             __attribute__ ((weak, alias("Default_Handler
 /* Vector table */
 __attribute__ ((section(".vectors")))
 const pFunc __VECTOR_TABLE[] = {
-  (pFunc) &__INITIAL_SP,       /* Initial Stack Pointer */
+  (pFunc) &__stack,       /* Initial Stack Pointer */
   Reset_Handler,               /* Reset Handler */
   NMI_Handler,                 /* NMI Handler */
   HardFault_Handler,           /* Hard Fault Handler */
