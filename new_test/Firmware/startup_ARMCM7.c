@@ -40,8 +40,8 @@ void INT1_Handler(void)             __attribute__ ((weak, alias("Default_Handler
 /* ... more as needed */
 
 /* Vector table */
-__attribute__ ((section(".vectors")))
-const pFunc __VECTOR_TABLE[] = {
+__attribute__ ((section(".isr_vector")))
+const pFunc __Vectors[] = {
   (pFunc) &__stack,       /* Initial Stack Pointer */
   Reset_Handler,               /* Reset Handler */
   NMI_Handler,                 /* NMI Handler */

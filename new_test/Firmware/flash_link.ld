@@ -79,9 +79,9 @@ ENTRY(Reset_Handler)
 SECTIONS
 {
 	/*begin at 0x0 address*/
-  .vectors :
+  .isr_vector :
   {
-    KEEP(*(.vectors)) /*'keep' keyword prevents compiler optimize this when them not cited by code.*/
+    KEEP(*(.isr_vector)) /*'keep' keyword prevents compiler optimize this when them not cited by code.*/
 
   } > ITCM
 
