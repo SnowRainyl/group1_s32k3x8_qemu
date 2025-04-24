@@ -11,18 +11,6 @@ Discarded input sections
 
  .group         0x00000000        0xc main.o
  .group         0x00000000        0xc main.o
- .group         0x00000000        0xc main.o
- .group         0x00000000        0xc main.o
- .group         0x00000000        0xc main.o
- .group         0x00000000        0xc main.o
- .group         0x00000000        0xc main.o
- .group         0x00000000        0xc main.o
- .group         0x00000000        0xc main.o
- .group         0x00000000        0xc main.o
- .group         0x00000000        0xc main.o
- .group         0x00000000        0xc main.o
- .group         0x00000000        0xc main.o
- .group         0x00000000        0xc main.o
  .text          0x00000000        0x0 main.o
  .data          0x00000000        0x0 main.o
  .bss           0x00000000        0x0 main.o
@@ -359,7 +347,6 @@ Discarded input sections
  .debug_macro   0x00000000       0x12 ../FreeRTOS/FreeRTOS/Source/tasks.o
  .debug_macro   0x00000000      0xfd7 ../FreeRTOS/FreeRTOS/Source/tasks.o
  .debug_macro   0x00000000       0xc3 ../FreeRTOS/FreeRTOS/Source/tasks.o
- .debug_macro   0x00000000      0x14f ../FreeRTOS/FreeRTOS/Source/tasks.o
  .group         0x00000000        0xc ../FreeRTOS/FreeRTOS/Source/queue.o
  .group         0x00000000        0xc ../FreeRTOS/FreeRTOS/Source/queue.o
  .group         0x00000000        0xc ../FreeRTOS/FreeRTOS/Source/queue.o
@@ -850,7 +837,6 @@ Discarded input sections
  .text.vPortValidateInterruptPriority
                 0x00000000       0x8c ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
  .debug_macro   0x00000000      0xad8 ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
- .debug_macro   0x00000000      0x190 ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
  .debug_macro   0x00000000      0x34e ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
  .debug_macro   0x00000000       0x16 ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
  .debug_macro   0x00000000      0x154 ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
@@ -943,46 +929,46 @@ END GROUP
  .isr_vector    0x00000000       0x48 startup_ARMCM7.o
                 0x00000000                __Vectors
 
-.text           0x00400000      0x59c
+.text           0x00400000      0x520
  *(.text*)
- .text.main     0x00400000       0x84 main.o
+ .text.main     0x00400000       0x24 main.o
                 0x00400000                main
  .text.Reset_Handler
-                0x00400084       0x4c startup_ARMCM7.o
-                0x00400084                Reset_Handler
+                0x00400024       0x4c startup_ARMCM7.o
+                0x00400024                Reset_Handler
  .text.Default_Handler
-                0x004000d0        0x8 startup_ARMCM7.o
-                0x004000d0                DebugMon_Handler
-                0x004000d0                HardFault_Handler
-                0x004000d0                INT0_Handler
-                0x004000d0                NMI_Handler
-                0x004000d0                UsageFault_Handler
-                0x004000d0                Default_Handler
-                0x004000d0                MemManage_Handler
-                0x004000d0                INT1_Handler
-                0x004000d0                BusFault_Handler
+                0x00400070        0x8 startup_ARMCM7.o
+                0x00400070                DebugMon_Handler
+                0x00400070                HardFault_Handler
+                0x00400070                INT0_Handler
+                0x00400070                NMI_Handler
+                0x00400070                UsageFault_Handler
+                0x00400070                Default_Handler
+                0x00400070                MemManage_Handler
+                0x00400070                INT1_Handler
+                0x00400070                BusFault_Handler
  .text.SystemInit
-                0x004000d8       0x2c system_ARMCM7.o
-                0x004000d8                SystemInit
+                0x00400078       0x2c system_ARMCM7.o
+                0x00400078                SystemInit
  .text.xTaskIncrementTick
-                0x00400104      0x238 ../FreeRTOS/FreeRTOS/Source/tasks.o
-                0x00400104                xTaskIncrementTick
+                0x004000a4      0x238 ../FreeRTOS/FreeRTOS/Source/tasks.o
+                0x004000a4                xTaskIncrementTick
  .text.vTaskSwitchContext
-                0x0040033c       0xc0 ../FreeRTOS/FreeRTOS/Source/tasks.o
-                0x0040033c                vTaskSwitchContext
+                0x004002dc       0xc0 ../FreeRTOS/FreeRTOS/Source/tasks.o
+                0x004002dc                vTaskSwitchContext
  .text.prvResetNextTaskUnblockTime
-                0x004003fc       0x38 ../FreeRTOS/FreeRTOS/Source/tasks.o
- *fill*         0x00400434        0xc 
+                0x0040039c       0x38 ../FreeRTOS/FreeRTOS/Source/tasks.o
+ *fill*         0x004003d4        0xc 
  .text.vPortSVCHandler
-                0x00400440       0x28 ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
-                0x00400440                vPortSVCHandler
- *fill*         0x00400468        0x8 
+                0x004003e0       0x28 ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
+                0x004003e0                vPortSVCHandler
+ *fill*         0x00400408        0x8 
  .text.xPortPendSVHandler
-                0x00400470       0x68 ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
-                0x00400470                xPortPendSVHandler
+                0x00400410       0x68 ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
+                0x00400410                xPortPendSVHandler
  .text.xPortSysTickHandler
-                0x004004d8       0x48 ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
-                0x004004d8                xPortSysTickHandler
+                0x00400478       0x48 ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
+                0x00400478                xPortSysTickHandler
  *(.init)
  *(.fini)
  *crtbegin.o(.ctors)
@@ -996,68 +982,66 @@ END GROUP
  *(SORT_BY_NAME(.dtors.*))
  *(.dtors)
  *(.rodata*)
- .rodata        0x00400520       0x19 main.o
  *(.eh_frame*)
- *fill*         0x00400539        0x3 
- .eh_frame      0x0040053c       0x34 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-strlen.o)
- .eh_frame      0x00400570       0x2c /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-memcpy.o)
+ .eh_frame      0x004004c0       0x34 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-strlen.o)
+ .eh_frame      0x004004f4       0x2c /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-memcpy.o)
 
-.glue_7         0x0040059c        0x0
- .glue_7        0x0040059c        0x0 linker stubs
+.glue_7         0x00400520        0x0
+ .glue_7        0x00400520        0x0 linker stubs
 
-.glue_7t        0x0040059c        0x0
- .glue_7t       0x0040059c        0x0 linker stubs
+.glue_7t        0x00400520        0x0
+ .glue_7t       0x00400520        0x0 linker stubs
 
-.vfp11_veneer   0x0040059c        0x0
- .vfp11_veneer  0x0040059c        0x0 linker stubs
+.vfp11_veneer   0x00400520        0x0
+ .vfp11_veneer  0x00400520        0x0 linker stubs
 
-.v4_bx          0x0040059c        0x0
- .v4_bx         0x0040059c        0x0 linker stubs
+.v4_bx          0x00400520        0x0
+ .v4_bx         0x00400520        0x0 linker stubs
 
-.iplt           0x0040059c        0x0
- .iplt          0x0040059c        0x0 main.o
+.iplt           0x00400520        0x0
+ .iplt          0x00400520        0x0 startup_ARMCM7.o
 
-.rel.dyn        0x0040059c        0x0
- .rel.iplt      0x0040059c        0x0 main.o
+.rel.dyn        0x00400520        0x0
+ .rel.iplt      0x00400520        0x0 startup_ARMCM7.o
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
-                0x0040059c                        __exidx_start = .
+                0x00400520                        __exidx_start = .
 
 .ARM.exidx
  *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-                0x0040059c                        __exidx_end = .
+                0x00400520                        __exidx_end = .
 
-.ecc.table      0x0040059c       0x60
-                0x0040059c                        . = ALIGN (0x4)
-                0x0040059c                        __ecc_table_start__ = .
-                0x0040059c        0x8 QUAD 0x20410000 __data_start__
-                0x004005a4        0x8 QUAD 0x1 ((__data_end__ - __data_start__) / 0x8)
-                0x004005ac        0x8 QUAD 0x20410008 __bss_start__
-                0x004005b4        0x8 QUAD 0x1c ((__bss_end__ - __bss_start__) / 0x8)
-                0x004005bc        0x8 QUAD 0x204100e8 __HeapTop
-                0x004005c4        0x8 QUAD 0x200 ((__HeapLimit - __HeapTop) / 0x8)
-                0x004005cc        0x8 QUAD 0x2043f000 __StackLimit
-                0x004005d4        0x8 QUAD 0x200 ((__StackTop - __StackLimit) / 0x8)
-                0x004005dc        0x8 QUAD 0x0 ORIGIN (ITCM)
-                0x004005e4        0x8 QUAD 0x2000 (LENGTH (ITCM) / 0x8)
-                0x004005ec        0x8 QUAD 0x20000000 ORIGIN (DTCM)
-                0x004005f4        0x8 QUAD 0x4000 (LENGTH (DTCM) / 0x8)
-                0x004005fc                        __ecc_table_end__ = .
+.ecc.table      0x00400520       0x60
+                0x00400520                        . = ALIGN (0x4)
+                0x00400520                        __ecc_table_start__ = .
+                0x00400520        0x8 QUAD 0x20410000 __data_start__
+                0x00400528        0x8 QUAD 0x1 ((__data_end__ - __data_start__) / 0x8)
+                0x00400530        0x8 QUAD 0x20410008 __bss_start__
+                0x00400538        0x8 QUAD 0x1c ((__bss_end__ - __bss_start__) / 0x8)
+                0x00400540        0x8 QUAD 0x204100e8 __HeapTop
+                0x00400548        0x8 QUAD 0x200 ((__HeapLimit - __HeapTop) / 0x8)
+                0x00400550        0x8 QUAD 0x2043f000 __StackLimit
+                0x00400558        0x8 QUAD 0x200 ((__StackTop - __StackLimit) / 0x8)
+                0x00400560        0x8 QUAD 0x0 ORIGIN (ITCM)
+                0x00400568        0x8 QUAD 0x2000 (LENGTH (ITCM) / 0x8)
+                0x00400570        0x8 QUAD 0x20000000 ORIGIN (DTCM)
+                0x00400578        0x8 QUAD 0x4000 (LENGTH (DTCM) / 0x8)
+                0x00400580                        __ecc_table_end__ = .
 
-.copy.table     0x004005fc        0xc
-                0x004005fc                        . = ALIGN (0x4)
-                0x004005fc                        __copy_table_start__ = .
-                0x004005fc        0x4 LONG 0x400608 __etext
-                0x00400600        0x4 LONG 0x20410000 __data_start__
-                0x00400604        0x4 LONG 0x2 ((__data_end__ - __data_start__) / 0x4)
-                0x00400608                        __copy_table_end__ = .
+.copy.table     0x00400580        0xc
+                0x00400580                        . = ALIGN (0x4)
+                0x00400580                        __copy_table_start__ = .
+                0x00400580        0x4 LONG 0x400590 __etext
+                0x00400584        0x4 LONG 0x20410000 __data_start__
+                0x00400588        0x4 LONG 0x2 ((__data_end__ - __data_start__) / 0x4)
+                0x0040058c                        __copy_table_end__ = .
 
-.zero.table     0x00400608        0x0
-                0x00400608                        . = ALIGN (0x4)
-                0x00400608                        __zero_table_start__ = .
-                0x00400608                        __zero_table_end__ = .
-                0x00400608                        __etext = ALIGN (0x8)
+.zero.table     0x0040058c        0x0
+                0x0040058c                        . = ALIGN (0x4)
+                0x0040058c                        __zero_table_start__ = .
+                0x0040058c                        __zero_table_end__ = .
+                0x00400590                        __etext = ALIGN (0x8)
 
 .boot_header
  *(.boot_header)
@@ -1065,7 +1049,7 @@ END GROUP
 .standby_ram
  *(.standby_ram)
 
-.data           0x20410000        0x8 load address 0x00400608
+.data           0x20410000        0x8 load address 0x00400590
                 0x20410000                        . = ALIGN (0x8)
                 0x20410000                        __data_start__ = .
  *(vtable)
@@ -1093,10 +1077,10 @@ END GROUP
  *fill*         0x20410004        0x4 
                 0x20410008                        __data_end__ = .
 
-.igot.plt       0x20410008        0x0 load address 0x00400610
- .igot.plt      0x20410008        0x0 main.o
+.igot.plt       0x20410008        0x0 load address 0x00400598
+ .igot.plt      0x20410008        0x0 startup_ARMCM7.o
 
-.bss            0x20410008       0xe0 load address 0x00400610
+.bss            0x20410008       0xe0 load address 0x00400598
                 0x20410008                        . = ALIGN (0x8)
                 0x20410008                        __bss_start__ = .
  *(.bss)
@@ -1157,23 +1141,23 @@ END GROUP
 OUTPUT(firmware.elf elf32-littlearm)
 LOAD linker stubs
 
-.debug_info     0x00000000     0x3336
- .debug_info    0x00000000      0x123 main.o
- .debug_info    0x00000123      0x163 startup_ARMCM7.o
- .debug_info    0x00000286      0x408 system_ARMCM7.o
- .debug_info    0x0000068e     0x271f ../FreeRTOS/FreeRTOS/Source/tasks.o
- .debug_info    0x00002dad      0x523 ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
- .debug_info    0x000032d0       0x33 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-strlen.o)
- .debug_info    0x00003303       0x33 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-memcpy.o)
+.debug_info     0x00000000     0x32bb
+ .debug_info    0x00000000       0xa8 main.o
+ .debug_info    0x000000a8      0x163 startup_ARMCM7.o
+ .debug_info    0x0000020b      0x408 system_ARMCM7.o
+ .debug_info    0x00000613     0x271f ../FreeRTOS/FreeRTOS/Source/tasks.o
+ .debug_info    0x00002d32      0x523 ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
+ .debug_info    0x00003255       0x33 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-strlen.o)
+ .debug_info    0x00003288       0x33 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-memcpy.o)
 
-.debug_abbrev   0x00000000      0x8cb
- .debug_abbrev  0x00000000       0x9e main.o
- .debug_abbrev  0x0000009e      0x100 startup_ARMCM7.o
- .debug_abbrev  0x0000019e       0xf0 system_ARMCM7.o
- .debug_abbrev  0x0000028e      0x396 ../FreeRTOS/FreeRTOS/Source/tasks.o
- .debug_abbrev  0x00000624      0x257 ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
- .debug_abbrev  0x0000087b       0x28 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-strlen.o)
- .debug_abbrev  0x000008a3       0x28 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-memcpy.o)
+.debug_abbrev   0x00000000      0x89b
+ .debug_abbrev  0x00000000       0x6e main.o
+ .debug_abbrev  0x0000006e      0x100 startup_ARMCM7.o
+ .debug_abbrev  0x0000016e       0xf0 system_ARMCM7.o
+ .debug_abbrev  0x0000025e      0x396 ../FreeRTOS/FreeRTOS/Source/tasks.o
+ .debug_abbrev  0x000005f4      0x257 ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
+ .debug_abbrev  0x0000084b       0x28 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-strlen.o)
+ .debug_abbrev  0x00000873       0x28 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-memcpy.o)
 
 .debug_aranges  0x00000000      0x360
  .debug_aranges
@@ -1192,71 +1176,61 @@ LOAD linker stubs
                 0x00000340       0x20 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-memcpy.o)
 
 .debug_rnglists
-                0x00000000      0x274
+                0x00000000      0x273
  .debug_rnglists
-                0x00000000       0x14 main.o
+                0x00000000       0x13 main.o
  .debug_rnglists
-                0x00000014       0x19 startup_ARMCM7.o
+                0x00000013       0x19 startup_ARMCM7.o
  .debug_rnglists
-                0x0000002d       0x19 system_ARMCM7.o
+                0x0000002c       0x19 system_ARMCM7.o
  .debug_rnglists
-                0x00000046      0x1d1 ../FreeRTOS/FreeRTOS/Source/tasks.o
+                0x00000045      0x1d1 ../FreeRTOS/FreeRTOS/Source/tasks.o
  .debug_rnglists
-                0x00000217       0x5d ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
+                0x00000216       0x5d ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
 
-.debug_macro    0x00000000     0x4da1
- .debug_macro   0x00000000       0xe4 main.o
- .debug_macro   0x000000e4      0xad8 main.o
- .debug_macro   0x00000bbc      0x190 main.o
- .debug_macro   0x00000d4c      0x34e main.o
- .debug_macro   0x0000109a       0x16 main.o
- .debug_macro   0x000010b0      0x154 main.o
- .debug_macro   0x00001204       0x1c main.o
- .debug_macro   0x00001220      0x182 main.o
- .debug_macro   0x000013a2       0xe7 main.o
- .debug_macro   0x00001489       0x2e main.o
- .debug_macro   0x000014b7       0x1f main.o
- .debug_macro   0x000014d6       0x12 main.o
- .debug_macro   0x000014e8      0xfd7 main.o
- .debug_macro   0x000024bf       0xc3 main.o
- .debug_macro   0x00002582      0x14f main.o
- .debug_macro   0x000026d1       0x1a startup_ARMCM7.o
- .debug_macro   0x000026eb       0x8d system_ARMCM7.o
- .debug_macro   0x00002778      0xade system_ARMCM7.o
- .debug_macro   0x00003256       0x16 system_ARMCM7.o
- .debug_macro   0x0000326c       0x7c system_ARMCM7.o
- .debug_macro   0x000032e8       0x1c system_ARMCM7.o
- .debug_macro   0x00003304       0x1c system_ARMCM7.o
- .debug_macro   0x00003320       0x22 system_ARMCM7.o
- .debug_macro   0x00003342      0x116 system_ARMCM7.o
- .debug_macro   0x00003458     0x1305 system_ARMCM7.o
- .debug_macro   0x0000475d      0x11f system_ARMCM7.o
- .debug_macro   0x0000487c       0x27 system_ARMCM7.o
- .debug_macro   0x000048a3      0x289 ../FreeRTOS/FreeRTOS/Source/tasks.o
- .debug_macro   0x00004b2c       0x16 ../FreeRTOS/FreeRTOS/Source/tasks.o
- .debug_macro   0x00004b42       0x3c ../FreeRTOS/FreeRTOS/Source/tasks.o
- .debug_macro   0x00004b7e       0x98 ../FreeRTOS/FreeRTOS/Source/tasks.o
- .debug_macro   0x00004c16       0x17 ../FreeRTOS/FreeRTOS/Source/tasks.o
- .debug_macro   0x00004c2d      0x174 ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
+.debug_macro    0x00000000     0x37ef
+ .debug_macro   0x00000000       0x1a main.o
+ .debug_macro   0x0000001a      0xad8 main.o
+ .debug_macro   0x00000af2      0x34e main.o
+ .debug_macro   0x00000e40       0x1a startup_ARMCM7.o
+ .debug_macro   0x00000e5a       0x8d system_ARMCM7.o
+ .debug_macro   0x00000ee7      0xade system_ARMCM7.o
+ .debug_macro   0x000019c5       0x16 system_ARMCM7.o
+ .debug_macro   0x000019db       0x7c system_ARMCM7.o
+ .debug_macro   0x00001a57       0x1c system_ARMCM7.o
+ .debug_macro   0x00001a73       0x1c system_ARMCM7.o
+ .debug_macro   0x00001a8f       0x22 system_ARMCM7.o
+ .debug_macro   0x00001ab1      0x116 system_ARMCM7.o
+ .debug_macro   0x00001bc7     0x1305 system_ARMCM7.o
+ .debug_macro   0x00002ecc      0x11f system_ARMCM7.o
+ .debug_macro   0x00002feb       0x27 system_ARMCM7.o
+ .debug_macro   0x00003012      0x289 ../FreeRTOS/FreeRTOS/Source/tasks.o
+ .debug_macro   0x0000329b       0x16 ../FreeRTOS/FreeRTOS/Source/tasks.o
+ .debug_macro   0x000032b1       0x3c ../FreeRTOS/FreeRTOS/Source/tasks.o
+ .debug_macro   0x000032ed      0x14f ../FreeRTOS/FreeRTOS/Source/tasks.o
+ .debug_macro   0x0000343c       0x98 ../FreeRTOS/FreeRTOS/Source/tasks.o
+ .debug_macro   0x000034d4       0x17 ../FreeRTOS/FreeRTOS/Source/tasks.o
+ .debug_macro   0x000034eb      0x174 ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
+ .debug_macro   0x0000365f      0x190 ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
 
-.debug_line     0x00000000     0x258d
- .debug_line    0x00000000      0x1aa main.o
- .debug_line    0x000001aa       0xb8 startup_ARMCM7.o
- .debug_line    0x00000262      0x141 system_ARMCM7.o
- .debug_line    0x000003a3     0x1bf6 ../FreeRTOS/FreeRTOS/Source/tasks.o
- .debug_line    0x00001f99      0x4b5 ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
- .debug_line    0x0000244e       0x86 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-strlen.o)
- .debug_line    0x000024d4       0xb9 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-memcpy.o)
+.debug_line     0x00000000     0x2461
+ .debug_line    0x00000000       0x7e main.o
+ .debug_line    0x0000007e       0xb8 startup_ARMCM7.o
+ .debug_line    0x00000136      0x141 system_ARMCM7.o
+ .debug_line    0x00000277     0x1bf6 ../FreeRTOS/FreeRTOS/Source/tasks.o
+ .debug_line    0x00001e6d      0x4b5 ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
+ .debug_line    0x00002322       0x86 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-strlen.o)
+ .debug_line    0x000023a8       0xb9 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-memcpy.o)
 
-.debug_str      0x00000000    0x1c3d4
- .debug_str     0x00000000    0x1c3d4 main.o
-                               0xe4ce (size before relaxing)
- .debug_str     0x0001c3d4     0x39b0 startup_ARMCM7.o
- .debug_str     0x0001c3d4     0xbd05 system_ARMCM7.o
- .debug_str     0x0001c3d4    0x13673 ../FreeRTOS/FreeRTOS/Source/tasks.o
- .debug_str     0x0001c3d4     0xed7a ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
- .debug_str     0x0001c3d4       0xab /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-strlen.o)
- .debug_str     0x0001c3d4       0xac /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-memcpy.o)
+.debug_str      0x00000000    0x1c2b5
+ .debug_str     0x00000000    0x1c2b5 main.o
+                               0x38f8 (size before relaxing)
+ .debug_str     0x0001c2b5     0x39b0 startup_ARMCM7.o
+ .debug_str     0x0001c2b5     0xbd05 system_ARMCM7.o
+ .debug_str     0x0001c2b5    0x13673 ../FreeRTOS/FreeRTOS/Source/tasks.o
+ .debug_str     0x0001c2b5     0xed7a ../FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
+ .debug_str     0x0001c2b5       0xab /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-strlen.o)
+ .debug_str     0x0001c2b5       0xac /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-memcpy.o)
 
 .comment        0x00000000       0x26
  .comment       0x00000000       0x26 main.o

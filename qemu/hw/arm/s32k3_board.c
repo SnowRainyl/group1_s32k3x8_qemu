@@ -128,6 +128,13 @@ static void s32k3x8_initialize_memory_regions(MemoryRegion *system_memory)
     memory_region_add_subregion(system_memory, INT_SRAM_1_BASE, sram1);
     memory_region_add_subregion(system_memory, INT_SRAM_2_BASE, sram2);
     qemu_log_mask(CPU_LOG_INT, "Memory regions initialized successfully.\n");
+
+    /*alias*/
+    MemoryRegion *flash_alias = g_new(MemoryRegion, 1);
+    memory_region_init_alias(flash_alias, NULL, "s32k3x8.flash_alias", 
+                         C0flash, 0, INT_ITCM_SIZE);
+    memory_region_add_subregion_overlap(system_memory, 0, flash_alias, 1); 
+
 }
 
 // board_init
@@ -159,7 +166,7 @@ static void s32k3x8evb_init(MachineState *machine)
     clock_set_hz(sysclk, S32K3_SYSCLK_FREQ);
     
     // 4. no alias pflash-->itcm    
-    
+   /* 创建别名映射: FLASH映射到地址0 */
     // 6. 初始化ARM核心
     object_initialize_child(OBJECT(machine), "armv7m", &s->armv7m, TYPE_ARMV7M);
     
