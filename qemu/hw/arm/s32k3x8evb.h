@@ -9,14 +9,11 @@
 #include "hw/arm/armv7m.h"
 #include "hw/sysbus.h"
 
-// 定义内存大小
+// define the size of memory
 #define S32K3X8EVB_FLASH_SIZE (4 * MiB)  
 #define S32K3X8EVB_SRAM_SIZE  (1 * MiB)
 //define the size of memory--mapping
-//#define S32K3_SRAM0_BASE     0x40264000  //PRAMC_0 
-//#define S32K3_FLASH_BASE     0x00400000  // FLASH 
-#define S32K3_FLASH_BASE 0x0 
-//#define S32K3_FLASH_BASE 0x00400000  // 修改Flash基地址
+#define S32K3_FLASH_BASE 0x00400000  //Flash base
 #define S32K3_SRAM0_BASE 0x20400000
 
 // 定义设备类型标识符

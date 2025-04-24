@@ -35,12 +35,9 @@ MEMORY
   M7_0_PFLASH (RX)      : ORIGIN = 0x00400000, LENGTH = 0x200000
   M7_0_DFLASH (RX)      : ORIGIN = 0x10000000, LENGTH = 0xC000
   M7_0_SRAM   (RW)      : ORIGIN = 0x20410000, LENGTH = 0x30000
-/*//enventhough the cortex m7 shows that 358 doesn't include core1 instance but in physical it include. because core1 work together with core0, it means them be seen as a logic unit due to lockstep mechanism .
-//锁步模式是一种安全机制，其中两个核心执行完全相同的指令，然后比较结果以检测任何错误。从功能角度看，这被视为单个处理器核心（因为两个核心一起工作作为一个逻辑单元），这就是为什么实例表显示CM7_1为"No"。 */
   M7_1_PFLASH (RX)      : ORIGIN = 0x00600000, LENGTH = 0x200000
   M7_1_DFLASH (RX)      : ORIGIN = 0x1000C000, LENGTH = 0xA000
   M7_1_SRAM   (RW)      : ORIGIN = 0x20440000, LENGTH = 0x40000
-  
   M7_2_PFLASH (RX)      : ORIGIN = 0x00800000, LENGTH = 0x400000
   M7_2_DFLASH (RX)      : ORIGIN = 0x10016000, LENGTH = 0xA000
   M7_2_SRAM   (RW)      : ORIGIN = 0x20480000, LENGTH = 0x40000

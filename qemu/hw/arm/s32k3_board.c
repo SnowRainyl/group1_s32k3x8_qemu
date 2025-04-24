@@ -27,26 +27,33 @@
 #define INT_STACK_DTCM_BASE     0x2001F000  // DTCM中的栈区域
 #define INT_STACK_DTCM_SIZE     (4 * KiB)   // 4KB
 
-#define INT_PFLASH_BASE         0x00400000  // 程序Flash
-#define INT_PFLASH_SIZE         0x007D4000  // ~8MB (减去保留区域)
+/*flash --774 page*/
+#define FLASH_SIZE              0x00822000
+#define INT_CODE_FLASH0_BASE    0x00400000
+#define INT_CODE_FLASH0_SIZE    0x00200000    // 2 MB 
+#define INT_CODE_FLASH1_BASE    0x00600000 
+#define INT_CODE_FLASH1_SIZE    0x00200000    // 2 MB 
+#define INT_CODE_FLASH2_BASE    0x00800000
+#define INT_CODE_FLASH2_SIZE    0x00200000    // 2 MB 
+#define INT_CODE_FLASH3_BASE    0x00A00000
+#define INT_CODE_FLASH3_SIZE    0x00200000    // 2 MB 
+#define INT_DATA_FLASH_BASE     0x10000000
+#define INT_DATA_FLASH_SIZE     0x00020000    // 128 KB 
+#define INT_UTEST_NVM_FLASH_BASE 0x1B000000
+#define INT_UTEST_NVM_FLASH_SIZE 0x00002000    // 8 KB 
 
-#define INT_DFLASH_BASE         0x10000000  // 数据Flash
-#define INT_DFLASH_SIZE         (128 * KiB) // 128KB
 
-#define INT_SRAM_BASE           0x20400000  // 内部SRAM
-#define INT_SRAM_SIZE           0x0007FF00  // ~512KB
+/*sram -- 762 page*/
+#define SRAM_SIZE               0xC0000
+#define INT_SRAM_STANDBY_BASE   0x20400000  // SRAM_standby, SPLIT FROM SRAM0
+#define INT_SRAM_STANDBY_SIZE   0x10000     // 64KB
+#define INT_SRAM_0_BASE         0x20410000
+#define INT_SRAM_0_SIZE         0x30000     // 256KB-64KB = 192KB
+#define INT_SRAM_1_BASE         0x20440000
+#define INT_SRAM_1_SIZE         0x40000     // 256KB
+#define INT_SRAM_2_BASE         0x20480000
+#define INT_SRAM_2_SIZE         0x40000     // 256KB
 
-#define INT_SRAM_FLS_RSV_BASE   0x2047FF00  // Flash预留SRAM
-#define INT_SRAM_FLS_RSV_SIZE   0x00000100  // 256B
-
-#define INT_SRAM_NO_CACHE_BASE  0x20480000  // 不可缓存SRAM
-#define INT_SRAM_NO_CACHE_SIZE  0x0003BF00  // ~240KB
-
-#define INT_SRAM_RESULTS_BASE   0x204BBF00  // 结果SRAM
-#define INT_SRAM_RESULTS_SIZE   0x00000100  // 256B
-
-#define INT_SRAM_SHARE_BASE     0x204BC000  // 共享SRAM
-#define INT_SRAM_SHARE_SIZE     (16 * KiB)  // 16KB
 
 // 外设基地址定义
 #define S32K3_PERIPH_BASE        0x40000000
@@ -55,8 +62,6 @@
 // 系统频率定义
 #define S32K3_SYSCLK_FREQ        (160 * 1000 * 1000)  // 160MHz
 
-// 定义全局变量保存关键内存区域的指针
-static MemoryRegion *g_pflash_region = NULL;
 
 // 内存映射初始化函数
 static void s32k3x8_initialize_memory_regions(MemoryRegion *system_memory)
@@ -67,121 +72,65 @@ static void s32k3x8_initialize_memory_regions(MemoryRegion *system_memory)
     MemoryRegion *itcm = g_new(MemoryRegion, 1);
     MemoryRegion *dtcm = g_new(MemoryRegion, 1);
     MemoryRegion *dtcm_stack = g_new(MemoryRegion, 1);
-    MemoryRegion *pflash = g_new(MemoryRegion, 1);
-    MemoryRegion *dflash = g_new(MemoryRegion, 1);
-    MemoryRegion *sram = g_new(MemoryRegion, 1);
-    MemoryRegion *sram_fls_rsv = g_new(MemoryRegion, 1);
-    MemoryRegion *sram_no_cache = g_new(MemoryRegion, 1);
-    MemoryRegion *sram_results = g_new(MemoryRegion, 1);
-    MemoryRegion *sram_share = g_new(MemoryRegion, 1);
+
     
-    /* ITCM 初始化 - RAM */
+    MemoryRegion *C0flash = g_new(MemoryRegion, 1);
+    MemoryRegion *C1flash = g_new(MemoryRegion, 1);
+    MemoryRegion *C2flash = g_new(MemoryRegion, 1);
+    MemoryRegion *C3flash = g_new(MemoryRegion, 1);
+    MemoryRegion *Dflash = g_new(MemoryRegion, 1);
+    MemoryRegion *UNVMflash = g_new(MemoryRegion, 1);
+
+    MemoryRegion *sram_standby = g_new(MemoryRegion, 1);
+    MemoryRegion *sram0 = g_new(MemoryRegion, 1);
+    MemoryRegion *sram1 = g_new(MemoryRegion, 1);
+    MemoryRegion *sram2 = g_new(MemoryRegion, 1);
+      
+    /* ITCM init - RAM */
     qemu_log_mask(CPU_LOG_INT, "Initializing ITCM...\n");
     memory_region_init_ram(itcm, NULL, "s32k3x8.itcm", INT_ITCM_SIZE, &error_fatal);
     memory_region_add_subregion(system_memory, INT_ITCM_BASE, itcm);
     
-    /* DTCM 初始化 - RAM */
+    /* DTCM init - RAM */
     qemu_log_mask(CPU_LOG_INT, "Initializing DTCM...\n");
     memory_region_init_ram(dtcm, NULL, "s32k3x8.dtcm", INT_DTCM_SIZE, &error_fatal);
     memory_region_add_subregion(system_memory, INT_DTCM_BASE, dtcm);
     
-    /* DTCM 栈区域 */
+    /* DTCM stack region */
     memory_region_init_ram(dtcm_stack, NULL, "s32k3x8.dtcm_stack", INT_STACK_DTCM_SIZE, &error_fatal);
     memory_region_add_subregion(system_memory, INT_STACK_DTCM_BASE, dtcm_stack);
     
-    /* Program Flash 初始化 - ROM */
+    /* Program Flash initial - ROM */
     qemu_log_mask(CPU_LOG_INT, "Initializing Program Flash...\n");
-    memory_region_init_rom(pflash, NULL, "s32k3x8.pflash", INT_PFLASH_SIZE, &error_fatal);
-    memory_region_add_subregion(system_memory, INT_PFLASH_BASE, pflash);
-    g_pflash_region = pflash; // 保存指针供后续使用
+    memory_region_init_rom(C0flash, NULL, "s32k3x8.C0flash", INT_CODE_FLASH0_SIZE, &error_fatal);
+    memory_region_init_rom(C1flash, NULL, "s32k3x8.C1lash", INT_CODE_FLASH1_SIZE, &error_fatal);
+    memory_region_init_rom(C2flash, NULL, "s32k3x8.C2lash", INT_CODE_FLASH2_SIZE, &error_fatal);
+    memory_region_init_rom(C3flash, NULL, "s32k3x8.C3lash", INT_CODE_FLASH3_SIZE, &error_fatal);
+    memory_region_init_rom(Dflash, NULL, "s32k3x8.Dflash", INT_DATA_FLASH_SIZE, &error_fatal);
+    memory_region_init_rom(UNVMflash, NULL, "s32k3x8.UNVMflash", INT_UTEST_NVM_FLASH_SIZE, &error_fatal);
+
+    memory_region_add_subregion(system_memory, INT_CODE_FLASH0_BASE, C0flash);
+    memory_region_add_subregion(system_memory, INT_CODE_FLASH1_BASE, C1flash);
+    memory_region_add_subregion(system_memory, INT_CODE_FLASH2_BASE, C2flash);
+    memory_region_add_subregion(system_memory, INT_CODE_FLASH3_BASE, C3flash);
+    memory_region_add_subregion(system_memory, INT_DATA_FLASH_BASE, Dflash);
+    memory_region_add_subregion(system_memory, INT_UTEST_NVM_FLASH_BASE, UNVMflash);
     
-    /* Data Flash 初始化 - ROM */
-    qemu_log_mask(CPU_LOG_INT, "Initializing Data Flash...\n");
-    memory_region_init_rom(dflash, NULL, "s32k3x8.dflash", INT_DFLASH_SIZE, &error_fatal);
-    memory_region_add_subregion(system_memory, INT_DFLASH_BASE, dflash);
-    
-    /* 初始化各种SRAM区域 */
+    /* SRAM region init */
     qemu_log_mask(CPU_LOG_INT, "Initializing SRAM regions...\n");
-    
-    memory_region_init_ram(sram, NULL, "s32k3x8.sram", INT_SRAM_SIZE, &error_fatal);
-    memory_region_add_subregion(system_memory, INT_SRAM_BASE, sram);
-    
-    memory_region_init_ram(sram_fls_rsv, NULL, "s32k3x8.sram_fls_rsv", INT_SRAM_FLS_RSV_SIZE, &error_fatal);
-    memory_region_add_subregion(system_memory, INT_SRAM_FLS_RSV_BASE, sram_fls_rsv);
-    
-    memory_region_init_ram(sram_no_cache, NULL, "s32k3x8.sram_no_cache", INT_SRAM_NO_CACHE_SIZE, &error_fatal);
-    memory_region_add_subregion(system_memory, INT_SRAM_NO_CACHE_BASE, sram_no_cache);
-    
-    memory_region_init_ram(sram_results, NULL, "s32k3x8.sram_results", INT_SRAM_RESULTS_SIZE, &error_fatal);
-    memory_region_add_subregion(system_memory, INT_SRAM_RESULTS_BASE, sram_results);
-    
-    memory_region_init_ram(sram_share, NULL, "s32k3x8.sram_share", INT_SRAM_SHARE_SIZE, &error_fatal);
-    memory_region_add_subregion(system_memory, INT_SRAM_SHARE_BASE, sram_share);
-    
+    memory_region_init_ram(sram_standby, NULL, "s32k3x8.sram_standby", INT_SRAM_STANDBY_SIZE, &error_fatal);
+    memory_region_init_ram(sram0, NULL, "s32k3x8.sram0", INT_SRAM_0_SIZE, &error_fatal);
+    memory_region_init_ram(sram1, NULL, "s32k3x8.sram1", INT_SRAM_1_SIZE, &error_fatal);
+    memory_region_init_ram(sram2, NULL, "s32k3x8.sram2", INT_SRAM_2_SIZE, &error_fatal);
+
+    memory_region_add_subregion(system_memory, INT_SRAM_STANDBY_BASE, sram_standby);
+    memory_region_add_subregion(system_memory, INT_SRAM_0_BASE, sram0);
+    memory_region_add_subregion(system_memory, INT_SRAM_1_BASE, sram1);
+    memory_region_add_subregion(system_memory, INT_SRAM_2_BASE, sram2);
     qemu_log_mask(CPU_LOG_INT, "Memory regions initialized successfully.\n");
 }
 
-// ROM 设备实现 - 保留但不再使用
-static void s32k3x8_rom_init(Object *obj)
-{
-    S32K3X8ROMState *s = S32K3X8_ROM(obj);
-    memory_region_init_rom(&s->flash, obj, "s32k3x8evb.flash",
-                          INT_PFLASH_SIZE, &error_fatal);
-    memory_region_set_readonly(&s->flash, true);
-}
-
-static void s32k3x8_rom_realize(DeviceState *dev, Error **errp)
-{
-    S32K3X8ROMState *s = S32K3X8_ROM(dev);
-    sysbus_init_mmio(SYS_BUS_DEVICE(dev), &s->flash);
-}
-
-static void s32k3x8_rom_class_init(ObjectClass *klass, void *data)
-{
-    DeviceClass *dc = DEVICE_CLASS(klass);
-    dc->desc = "S32K3X8 ROM";
-    dc->realize = s32k3x8_rom_realize;
-}
-
-static const TypeInfo s32k3x8_rom_info = {
-    .name          = TYPE_S32K3X8_ROM,
-    .parent        = TYPE_SYS_BUS_DEVICE,
-    .instance_size = sizeof(S32K3X8ROMState),
-    .instance_init = s32k3x8_rom_init,
-    .class_init    = s32k3x8_rom_class_init,
-};
-
-// RAM 设备实现 - 保留但不再使用
-static void s32k3x8_ram_init(Object *obj)
-{
-    S32K3X8RAMState *s = S32K3X8_RAM(obj);
-    qemu_log_mask(CPU_LOG_INT, "Initializing S32K3X8 RAM\n");
-    memory_region_init_ram(&s->sram, obj, "s32k3x8evb.sram",
-                          INT_SRAM_SIZE, &error_fatal);
-}
-
-static void s32k3x8_ram_realize(DeviceState *dev, Error **errp)
-{
-    S32K3X8RAMState *s = S32K3X8_RAM(dev);
-    sysbus_init_mmio(SYS_BUS_DEVICE(dev), &s->sram);
-}
-
-static void s32k3x8_ram_class_init(ObjectClass *klass, void *data)
-{
-    DeviceClass *dc = DEVICE_CLASS(klass);
-    dc->desc = "S32K3X8 RAM";
-    dc->realize = s32k3x8_ram_realize;
-}
-
-static const TypeInfo s32k3x8_ram_info = {
-    .name          = TYPE_S32K3X8_RAM,
-    .parent        = TYPE_SYS_BUS_DEVICE,
-    .instance_size = sizeof(S32K3X8RAMState),
-    .instance_init = s32k3x8_ram_init,
-    .class_init    = s32k3x8_ram_class_init,
-};
-
-// 板级初始化函数
+// board_init
 
 static void s32k3x8evb_init(MachineState *machine)
 {
@@ -209,65 +158,7 @@ static void s32k3x8evb_init(MachineState *machine)
     }
     clock_set_hz(sysclk, S32K3_SYSCLK_FREQ);
     
-    // 4. 创建PFLASH到ITCM的别名，确保中断向量表在地址0处可见
-    MemoryRegion *itcm_alias = g_new(MemoryRegion, 1);
-    memory_region_init_alias(itcm_alias, OBJECT(machine), "pflash-to-itcm", 
-                           g_pflash_region, 0, INT_ITCM_SIZE);
-    // 使用较高优先级(1)，确保这个别名覆盖已经映射的ITCM
-    memory_region_add_subregion_overlap(system_memory, INT_ITCM_BASE, itcm_alias, 1);
-    qemu_log_mask(CPU_LOG_INT, "Created memory alias from PFLASH to ITCM (addr 0)\n");
-    
-    // 5. 加载固件(如果指定)到PFLASH区域
-    if (machine->kernel_filename) {
-        // 使用全局保存的PFLASH区域指针获取其RAM指针
-        if (!g_pflash_region) {
-            error_report("Flash memory region not initialized");
-            return;
-        }
-        
-        uint8_t *flash_ptr = memory_region_get_ram_ptr(g_pflash_region);
-        
-        // 打开固件文件
-        int fd = open(machine->kernel_filename, O_RDONLY);
-        if (fd < 0) {
-            error_report("Failed to open kernel file %s", machine->kernel_filename);
-            return;
-        }
-
-        // 获取文件大小
-        off_t size = lseek(fd, 0, SEEK_END);
-        lseek(fd, 0, SEEK_SET);
-
-        qemu_log_mask(CPU_LOG_INT, "Loading firmware to PFLASH, size: %ld bytes\n", size);
-
-        // 读取固件到 Flash
-        if (read(fd, flash_ptr, size) != size) {
-            error_report("Failed to read kernel file");
-            close(fd);
-            return;
-        }
-        close(fd);
-
-        // 打印加载后的向量表内容
-        uint32_t *vector_table = (uint32_t *)flash_ptr;
-        qemu_log_mask(CPU_LOG_INT, "Vector table after loading (in PFLASH):\n");
-        qemu_log_mask(CPU_LOG_INT, "Initial SP: 0x%08x\n", vector_table[0]);
-        qemu_log_mask(CPU_LOG_INT, "Reset Vector: 0x%08x\n", vector_table[1]);
-        qemu_log_mask(CPU_LOG_INT, "First 32 bytes of firmware:\n");
-        for (int i = 0; i < 32; i++) {
-            qemu_log_mask(CPU_LOG_INT, "%02x ", flash_ptr[i]);
-            if ((i + 1) % 16 == 0) qemu_log_mask(CPU_LOG_INT, "\n");
-        }
-        
-        // 验证ITCM别名是否正常工作
-        uint8_t *itcm_ram = memory_region_get_ram_ptr(itcm_alias);
-        uint32_t initial_sp_itcm = *(uint32_t *)itcm_ram;
-        qemu_log_mask(CPU_LOG_INT, "Initial SP at ITCM alias (addr 0): 0x%08x (should match PFLASH)\n", 
-                     initial_sp_itcm);
-    } else {
-        error_report("No firmware file specified");
-        return;
-    }
+    // 4. no alias pflash-->itcm    
     
     // 6. 初始化ARM核心
     object_initialize_child(OBJECT(machine), "armv7m", &s->armv7m, TYPE_ARMV7M);
@@ -278,6 +169,7 @@ static void s32k3x8evb_init(MachineState *machine)
     qdev_prop_set_uint8(DEVICE(&s->armv7m), "num-prio-bits", 4);  // Cortex-M7 使用4位优先级
     qdev_prop_set_uint32(DEVICE(&s->armv7m), "num-irq", 240);     // S32K3X8的中断数量
     
+   
     // 7. 设置系统连接
     object_property_set_link(OBJECT(&s->armv7m), "memory", 
                            OBJECT(system_memory), &error_abort);
@@ -288,7 +180,9 @@ static void s32k3x8evb_init(MachineState *machine)
         error_reportf_err(error_local, "Failed to realize ARM core: ");
         return;
     }
-    
+     // 5. 加载固件
+    armv7m_load_kernel(ARM_CPU(first_cpu), machine->kernel_filename, INT_CODE_FLASH0_BASE, FLASH_SIZE);
+
     // 9. 初始化UART
     qemu_log_mask(CPU_LOG_INT, "Initializing UART\n");
     dev = qdev_new(TYPE_S32E8_LPUART);
@@ -321,7 +215,7 @@ static void s32k3x8evb_class_init(ObjectClass *oc, void *data)
     mc->default_cpus = 1;
     mc->min_cpus = 1;
     mc->max_cpus = 1;
-    mc->default_ram_size = INT_SRAM_SIZE;
+    mc->default_ram_size = SRAM_SIZE;
 }
 
 static const TypeInfo s32k3x8evb_type = {
@@ -335,8 +229,6 @@ static const TypeInfo s32k3x8evb_type = {
 static void s32k3x8evb_machine_init(void)
 {
     qemu_log_mask(CPU_LOG_INT, "Registering S32K3X8EVB machine type\n");
-    type_register_static(&s32k3x8_rom_info);
-    type_register_static(&s32k3x8_ram_info);
     type_register_static(&s32k3x8evb_type);
 }
 
