@@ -17,7 +17,7 @@
 #include "hw/sysbus.h"  
 #include "trace.h"
 #include "qom/object.h"
-#include "hw/irq.h" // 添加缺少的头文件
+#include "hw/irq.h" // Added missing header file
 
 /*define everything*/ 
 //=========================================================================
@@ -54,8 +54,8 @@
 #define GLOBAL_ENABLE     (1 << 1)    /* UART Enable */
 
 /* CTRL Register */
-#define CTRL_TE          (1 << 19)    /* 发送使能 - 位19，与RM匹配 */
-#define CTRL_RE          (1 << 18)    /* 接收使能 - 位18，与RM匹配 */
+#define CTRL_TE          (1 << 19)    /* Transmit Enable - Bit 19, matches RM */
+#define CTRL_RE          (1 << 18)    /* Receive Enable - Bit 18, matches RM */
 
 /* FIFO Register */
 #define FIFO_TXFE        (1 << 0)     /* Transmit FIFO Empty */
@@ -67,31 +67,31 @@
 #define STAT_RDRF        (1 << 21)    /* Receive Data Register Full */
 #define STAT_BRK13       (1 << 16)    /* Break Character Detected */
 
-/* LPUART 寄存器结构体定义 */
+/* LPUART Register Structure Definition */
 typedef struct {
-    uint32_t verid;    /* 版本ID寄存器 */
-    uint32_t param;    /* 参数寄存器 */
-    uint32_t global;   /* 全局寄存器 */
-    uint32_t pincfg;   /* 引脚配置寄存器 */
-    uint32_t baud;     /* 波特率寄存器 */
-    uint32_t stat;     /* 状态寄存器 */
-    uint32_t ctrl;     /* 控制寄存器 */
-    uint32_t data;     /* 数据寄存器 */
-    uint32_t match;    /* 匹配地址寄存器 */
-    uint32_t modir;    /* MODEM IrDA寄存器 */
-    uint32_t fifo;     /* FIFO寄存器 */
-    uint32_t water;    /* 水位寄存器 */
-    uint32_t dataro;   /* 只读数据寄存器 */
-    uint32_t mcr;      /* MODEM控制寄存器 */
-    uint32_t msr;      /* MODEM状态寄存器 */
-    uint32_t reir;     /* 接收器扩展空闲寄存器 */
-    uint32_t teir;     /* 发送器扩展空闲寄存器 */
-    uint32_t hdcr;     /* 半双工控制寄存器 */
-    uint32_t tocr;     /* 超时控制寄存器 */
-    uint32_t tosr;     /* 超时状态寄存器 */
+    uint32_t verid;    /* Version ID Register */
+    uint32_t param;    /* Parameter Register */
+    uint32_t global;   /* Global Register */
+    uint32_t pincfg;   /* Pin Configuration Register */
+    uint32_t baud;     /* Baud Rate Register */
+    uint32_t stat;     /* Status Register */
+    uint32_t ctrl;     /* Control Register */
+    uint32_t data;     /* Data Register */
+    uint32_t match;    /* Match Address Register */
+    uint32_t modir;    /* MODEM IrDA Register */
+    uint32_t fifo;     /* FIFO Register */
+    uint32_t water;    /* Watermark Register */
+    uint32_t dataro;   /* Data Read-Only Register */
+    uint32_t mcr;      /* MODEM Control Register */
+    uint32_t msr;      /* MODEM Status Register */
+    uint32_t reir;     /* Receiver Extended Idle Register */
+    uint32_t teir;     /* Transmitter Extended Idle Register */
+    uint32_t hdcr;     /* Half Duplex Control Register */
+    uint32_t tocr;     /* Timeout Control Register */
+    uint32_t tosr;     /* Timeout Status Register */
 } LPUART_reg;
 
-/* FIFO结构体定义 */ 
+/* FIFO Structure Definition */ 
 typedef struct {
     uint8_t *data;
     uint32_t sp, rp;
@@ -100,7 +100,7 @@ typedef struct {
 
 OBJECT_DECLARE_SIMPLE_TYPE(S32E8_LPUART_state, S32E8_LPUART)
 
-/*函数声明*/
+/*Function Declarations*/
 //========================================================================
 static uint64_t S32E8_LPUART_read(void *opaque, hwaddr addr, unsigned size);
 static void S32E8_LPUART_write(void *opaque, hwaddr addr, uint64_t val, unsigned size);
@@ -109,10 +109,10 @@ static int S32E8_LPUART_can_receive(void *opaque);
 static void S32E8_LPUART_receive(void *opaque, const uint8_t *buf, int size);
 static void S32E8_LPUART_event(void *opaque, QEMUChrEvent event);
 
-//数据结构定义
+//Data Structure Definition
 struct S32E8_LPUART_state
 {
-    SysBusDevice parent_obj;  //systembus 设备
+    SysBusDevice parent_obj;  //systembus device
     MemoryRegion iomem;
     CharBackend chr;
     qemu_irq irq;
@@ -126,7 +126,7 @@ struct S32E8_LPUART_state
     LPUART_reg regs; 
 };
 
-//结构化初始化语法 c99引入的特性
+//Structured initialization syntax - feature introduced in C99
 //=========================================================================
 static const MemoryRegionOps S32E8_LPUART_OPS = {
     .read = S32E8_LPUART_read,
@@ -154,7 +154,7 @@ static Property S32E8_LPUART_properties[] = {
 };
 
 
-/*具体实现函数 */
+/*Function Implementations*/
 //==========================================================================
 
 static void S32E8_LPUART_reset(DeviceState *dev)
@@ -187,7 +187,7 @@ static void S32E8_LPUART_reset(DeviceState *dev)
     s->instance_ID = 0;
 }
 
-// 简化版的FIFO reset函数
+// Simplified version of FIFO reset function
 static void fifo_reset(FIFO_LPUART *q) {
     if (q->data == NULL && q->size > 0) {
         q->data = g_malloc0(q->size);
@@ -212,7 +212,7 @@ static void S32E8_LPUART_realize(DeviceState *dev, Error **errp)
 {
     S32E8_LPUART_state *s = S32E8_LPUART(dev);
 
-    // 先执行重置，初始化所有寄存器
+    // First perform reset, initialize all registers
     S32E8_LPUART_reset(dev);
 
     qemu_chr_fe_set_handlers(
@@ -226,17 +226,17 @@ static void S32E8_LPUART_realize(DeviceState *dev, Error **errp)
         true
     );
     
-    // 初始化FIFO
+    // Initialize FIFO
     fifo_reset(&s->rx);
     fifo_reset(&s->tx);
 }
 
-// 简化版read函数 - 暂不实现
+// Simplified read function - not implemented yet
 static uint64_t S32E8_LPUART_read(void *opaque, hwaddr addr, unsigned size) {
     S32E8_LPUART_state *s = (S32E8_LPUART_state *)opaque;
     uint64_t ret = 0;
     
-    // 简单返回对应寄存器值
+    // Simply return corresponding register value
     switch (addr) {
     case DATA_OFFSET:
         ret = s->regs.data;
@@ -248,14 +248,14 @@ static uint64_t S32E8_LPUART_read(void *opaque, hwaddr addr, unsigned size) {
         ret = s->regs.global;
         break;
     default:
-        // 其他寄存器可以根据需要添加
+        // Other registers can be added as needed
         break;
     }
     
     return ret;
 }
 
-// write函数 - 重点实现DATA寄存器写入到QEMU后端的功能
+// write function - focus on implementing DATA register writing to QEMU backend
 static void S32E8_LPUART_write(void *opaque, hwaddr addr, uint64_t val, unsigned size) 
 {
     S32E8_LPUART_state *s = (S32E8_LPUART_state *)opaque;
@@ -263,9 +263,9 @@ static void S32E8_LPUART_write(void *opaque, hwaddr addr, uint64_t val, unsigned
     switch (addr) {
     case GLOBAL_OFFSET:
         if (val & GLOBAL_RST) {
-            // 软件复位
+            // Software reset
             S32E8_LPUART_reset(DEVICE(s));
-            // 清除复位标志
+            // Clear reset flag
             val &= ~GLOBAL_RST;
         }
         s->regs.global = val;
@@ -277,7 +277,7 @@ static void S32E8_LPUART_write(void *opaque, hwaddr addr, uint64_t val, unsigned
         
      case DATA_OFFSET:
         s->regs.data = val;
-        // 关键功能：当发送使能且有字符设备连接时，写入字符到QEMU后端
+        // Key functionality: When transmit is enabled and character device is connected, write character to QEMU backend
         if ((s->regs.ctrl & CTRL_TE) && qemu_chr_fe_backend_connected(&s->chr)) {
             uint8_t ch = val & 0xFF;
             qemu_chr_fe_write(&s->chr, &ch, 1);
@@ -291,39 +291,39 @@ static void S32E8_LPUART_write(void *opaque, hwaddr addr, uint64_t val, unsigned
         break;
 	
     default:
-        // 其他寄存器写入暂不处理，或者根据需要添加
+        // Other register writes not handled yet, or add as needed
         break;
     }
 }
 
-// 简化版can_receive函数
+// Simplified can_receive function
 static int S32E8_LPUART_can_receive(void *opaque) {
     S32E8_LPUART_state *s = (S32E8_LPUART_state *)opaque;
     
-    // 只检查接收使能
+    // Only check receive enable
     if (!(s->regs.ctrl & CTRL_RE)) {
         return 0;
     }
     
-    // 返回固定值，简化实现
+    // Return fixed value, simplified implementation
     return 1;
 }
 
-// 简化版receive函数
+// Simplified receive function
 static void S32E8_LPUART_receive(void *opaque, const uint8_t *buf, int size) {
-    // 暂不实现接收功能
+    // Receive functionality not implemented yet
 }
 
-// 简化版event函数
+// Simplified event function
 static void S32E8_LPUART_event(void *opaque, QEMUChrEvent event) {
-    // 暂不处理事件
+    // Events not handled yet
 }
 
 static void S32E8_LPUART_class_init(ObjectClass *klass, void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
     
-    /* 只设置必要的 realize 函数，reset 在 realize 中调用 */
+    /* Only set necessary realize function, reset is called in realize */
     dc->realize = S32E8_LPUART_realize;
     device_class_set_props(dc, S32E8_LPUART_properties);
 }
