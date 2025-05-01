@@ -281,8 +281,8 @@ static void S32E8_LPUART_write(void *opaque, hwaddr addr, uint64_t val, unsigned
         if ((s->regs.ctrl & CTRL_TE) && qemu_chr_fe_backend_connected(&s->chr)) {
             uint8_t ch = val & 0xFF;
             qemu_chr_fe_write(&s->chr, &ch, 1);
-            error_report("LPUART: Sent char '%c' (0x%02x) to chardev", 
-                   isprint(ch) ? ch : '.', ch);
+            //error_report("LPUART: Sent char '%c' (0x%02x) to chardev", 
+              //     isprint(ch) ? ch : '.', ch);
         } else {
             error_report("LPUART: Failed to send char - TE=%d, connected=%d", 
                    (s->regs.ctrl & CTRL_TE) ? 1 : 0,

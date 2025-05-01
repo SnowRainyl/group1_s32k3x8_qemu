@@ -18,13 +18,13 @@
 #include "hw/irq.h"
 #include <stdio.h>
 
-// 内存区域定义 - 基于S32K358的链接文件
-#define INT_ITCM_BASE           0x00000000  // 指令紧耦合内存
+// Memory region definitions - Based on S32K358 linker file
+#define INT_ITCM_BASE           0x00000000  // Instruction Tightly Coupled Memory
 #define INT_ITCM_SIZE           (64 * KiB)  // 64KB
 
-#define INT_DTCM_BASE           0x20000000  // 数据紧耦合内存
+#define INT_DTCM_BASE           0x20000000  // Data Tightly Coupled Memory
 #define INT_DTCM_SIZE           (124 * KiB) // 124KB
-#define INT_STACK_DTCM_BASE     0x2001F000  // DTCM中的栈区域
+#define INT_STACK_DTCM_BASE     0x2001F000  // Stack area in DTCM
 #define INT_STACK_DTCM_SIZE     (4 * KiB)   // 4KB
 
 /*flash --774 page*/
@@ -55,30 +55,20 @@
 #define INT_SRAM_2_SIZE         0x40000     // 256KB
 
 
-// 外设基地址定义
+// Peripheral base address definitions
 #define S32K3_PERIPH_BASE        0x40000000
-#define S32K3_UART_BASE          (S32K3_PERIPH_BASE + 0x4A000) // 根据S32K3参考手册调整
+#define S32K3_UART_BASE          (S32K3_PERIPH_BASE + 0x4A000) // Adjusted according to S32K3 reference manual
 
-// 系统频率定义
+// System frequency definitions
 #define S32K3_SYSCLK_FREQ        (160 * 1000 * 1000)  // 160MHz
 
 
-static void fake_systick_tick(void *opaque)
-{
-    S32K3X8EVBState *s = (S32K3X8EVBState *)opaque;
-
-    // Pulse SysTick interrupt
-    qemu_irq_pulse(qdev_get_gpio_in(DEVICE(&s->armv7m), 15));  // SysTick is interrupt #15
-
-    // Re-arm the timer to fire again after 1ms
-    timer_mod(s->systick_timer, qemu_clock_get_ms(QEMU_CLOCK_VIRTUAL) + 1);
-}
-// 内存映射初始化函数
+// Memory mapping initialization function
 static void s32k3x8_initialize_memory_regions(MemoryRegion *system_memory)
 {
     qemu_log_mask(CPU_LOG_INT, "\n------------------ Initialization of the memory regions ------------------\n");
     
-    /* 分配所有内存区域 */
+    /* Allocate all memory regions */
     MemoryRegion *itcm = g_new(MemoryRegion, 1);
     MemoryRegion *dtcm = g_new(MemoryRegion, 1);
     MemoryRegion *dtcm_stack = g_new(MemoryRegion, 1);
@@ -139,11 +129,7 @@ static void s32k3x8_initialize_memory_regions(MemoryRegion *system_memory)
     memory_region_add_subregion(system_memory, INT_SRAM_2_BASE, sram2);
     qemu_log_mask(CPU_LOG_INT, "Memory regions initialized successfully.\n");
 
-    /*alias*/
-    MemoryRegion *flash_alias = g_new(MemoryRegion, 1);
-    memory_region_init_alias(flash_alias, NULL, "s32k3x8.flash_alias", 
-                         C0flash, 0, INT_ITCM_SIZE);
-    memory_region_add_subregion_overlap(system_memory, 0, flash_alias, 1); 
+  
 
 }
 
@@ -157,17 +143,17 @@ static void s32k3x8evb_init(MachineState *machine)
     
     qemu_log_mask(CPU_LOG_INT, "Initializing S32K3X8EVB board\n");
     
-    // 1. 检查并获取系统内存
+    // 1. Check and get system memory
     MemoryRegion *system_memory = get_system_memory();
     if (!system_memory) {
         error_report("Failed to get system memory");
         return;
     }
     
-    // 2. 使用内存映射初始化方法
+    // 2. Use memory mapping initialization method
     s32k3x8_initialize_memory_regions(system_memory);
     
-    // 3. 初始化系统时钟
+    // 3. Initialize system clock
     Clock *sysclk = clock_new(OBJECT(machine), "SYSCLK");
     if (!sysclk) {
         error_report("Failed to create system clock");
@@ -176,31 +162,31 @@ static void s32k3x8evb_init(MachineState *machine)
     clock_set_hz(sysclk, S32K3_SYSCLK_FREQ);
     
     // 4. no alias pflash-->itcm    
-   /* 创建别名映射: FLASH映射到地址0 */
-    // 6. 初始化ARM核心
+   /* Create alias mapping: FLASH mapped to address 0 */
+    // 6. Initialize ARM core
     object_initialize_child(OBJECT(machine), "armv7m", &s->armv7m, TYPE_ARMV7M);
     
-    // 配置CPU
+    // Configure CPU
     qdev_prop_set_string(DEVICE(&s->armv7m), "cpu-type", ARM_CPU_TYPE_NAME("cortex-m7"));
-    qdev_prop_set_uint32(DEVICE(&s->armv7m), "init-svtor", 0); // 向量表在地址0 (ITCM)
-    qdev_prop_set_uint8(DEVICE(&s->armv7m), "num-prio-bits", 4);  // Cortex-M7 使用4位优先级
-    qdev_prop_set_uint32(DEVICE(&s->armv7m), "num-irq", 240);     // S32K3X8的中断数量
+    qdev_prop_set_uint32(DEVICE(&s->armv7m), "init-svtor", INT_ITCM_BASE); // Vector table at address 0 (ITCM)
+    qdev_prop_set_uint8(DEVICE(&s->armv7m), "num-prio-bits", 4);  // Cortex-M7 uses 4 priority bits
+    qdev_prop_set_uint32(DEVICE(&s->armv7m), "num-irq", 240);     // Number of interrupts for S32K3X8
     
    
-    // 7. 设置系统连接
+    // 7. Set up system connections
     object_property_set_link(OBJECT(&s->armv7m), "memory", 
                            OBJECT(system_memory), &error_abort);
     qdev_connect_clock_in(DEVICE(&s->armv7m), "cpuclk", sysclk);
     
-    // 8. 实现系统总线设备
+    // 8. Implement system bus device
     if (!sysbus_realize(SYS_BUS_DEVICE(&s->armv7m), &error_local)) {
         error_reportf_err(error_local, "Failed to realize ARM core: ");
         return;
     }
-     // 5. 加载固件
+     // 5. Load firmware
     armv7m_load_kernel(ARM_CPU(first_cpu), machine->kernel_filename, INT_CODE_FLASH0_BASE, FLASH_SIZE);
 
-    // 9. 初始化UART
+    // 9. Initialize UART
     qemu_log_mask(CPU_LOG_INT, "Initializing UART\n");
     dev = qdev_new(TYPE_S32E8_LPUART);
     if (!dev) {
@@ -208,7 +194,7 @@ static void s32k3x8evb_init(MachineState *machine)
         return;
     }
     
-    // 配置UART
+    // Configure UART
     qdev_prop_set_chr(dev, "chardev", serial_hd(0));
     s->uart = dev;
     
@@ -217,13 +203,13 @@ static void s32k3x8evb_init(MachineState *machine)
         return;
     }
     
-    // 映射UART - 按照参考手册调整
+    // Map UART - adjusted according to reference manual
     sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, S32K3_UART_BASE);
     qemu_log_mask(CPU_LOG_INT, "S32K3X8EVB board initialization complete\n");       
 
 }
 
-// 板级类初始化
+// Board class initialization
 static void s32k3x8evb_class_init(ObjectClass *oc, void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
@@ -242,7 +228,7 @@ static const TypeInfo s32k3x8evb_type = {
     .class_init = s32k3x8evb_class_init,
 };
 
-// 注册机器类型
+// Register machine type
 static void s32k3x8evb_machine_init(void)
 {
     qemu_log_mask(CPU_LOG_INT, "Registering S32K3X8EVB machine type\n");

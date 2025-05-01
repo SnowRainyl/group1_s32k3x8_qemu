@@ -50,11 +50,11 @@ const pFunc __Vectors[] = {
   BusFault_Handler,            /* BusFault Handler */
   UsageFault_Handler,          /* UsageFault Handler */
   0, 0, 0, 0,                  /* Reserved */
-  vPortSVCHandler,                 /* change to freertos SVCall Handler */
+  vPortSVCHandler,                  /* change to freertos SVCall Handler */
   DebugMon_Handler,            /* Debug Monitor Handler */
   0,                           /* Reserved */
-  xPortPendSVHandler,              /* change to freertos PendSV Handler */
-  xPortSysTickHandler,             /* change to freertos SysTick Handler */
+  xPortPendSVHandler,             /* change to freertos PendSV Handler */
+  xPortSysTickHandler,            /* change to freertos SysTick Handler */
 
   // Interrupts
   INT0_Handler,
@@ -65,7 +65,7 @@ const pFunc __Vectors[] = {
 /* Reset handler: Initialize memory and jump to main */
 void Reset_Handler(void)
 {
-  uint32_t *src, *dst;
+   uint32_t *src, *dst;
 
   /* Copy data from Flash to RAM */
   src = &__etext;
