@@ -1,1 +1,0 @@
-systemcall.o: systemcall.c
