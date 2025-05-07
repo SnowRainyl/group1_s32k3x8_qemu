@@ -310,6 +310,8 @@ libcommon.a.p/hw_char_s32k3x8_uart.c.o: ../hw/char/s32k3x8_uart.c \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/qapi/error.h \
  qapi/qapi-types-error.h \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/qemu/error-report.h \
+ /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/qemu/log.h \
+ /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/qemu/log-for-trace.h \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/qemu/timer.h \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/chardev/char-fe.h \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/chardev/char.h \
@@ -327,5 +329,5 @@ libcommon.a.p/hw_char_s32k3x8_uart.c.o: ../hw/char/s32k3x8_uart.c \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/trace/control.h \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/trace/event-internal.h \
  /home/yuqi/torin/first_y/01_os_class/01_project/qemu/trace/control-internal.h \
- /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/qemu/log-for-trace.h \
- /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/hw/irq.h
+ /home/yuqi/torin/first_y/01_os_class/01_project/qemu/include/hw/irq.h \
+ ../hw/char/s32k3x8_uart.h
