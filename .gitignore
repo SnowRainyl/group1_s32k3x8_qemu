@@ -72,7 +72,7 @@ new_test/*/obj/
 .gdb_history
 peda-session-*.txt
 core.*
-
+!core.c
 
 # =============================================
 # 文档和压缩文件 (可选)                       #
