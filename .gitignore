@@ -23,7 +23,7 @@ qemu/**/*.pyo
 # 编译输出
 *.o
 *.elf
-*.bin
+new_test/Firmware/*.bin
 *.hex
 *.map
 *.lst
