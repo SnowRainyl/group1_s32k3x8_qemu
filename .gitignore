@@ -30,6 +30,13 @@ qemu/**/*.pyo
 *.d
 *.su
 
+# 特定固件文件
+firmware.*
+main.o
+startup_*.o
+system_*.o
+*_ARMCM7.o
+
 # 构建目录
 build/
 obj/
@@ -41,7 +48,6 @@ Release/
 new_test/Firmware/build/
 new_test/*/build/
 new_test/*/obj/
-
 # =============================================
 # Ubuntu/Linux 系统文件                       #
 # =============================================
