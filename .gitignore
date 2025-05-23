@@ -30,7 +30,7 @@ new_test/Firmware/*.bin
 *.d
 *.su
 
-# 特定固件文件
+# 特定固件file
 firmware.*
 main.o
 startup_*.o
@@ -73,6 +73,7 @@ new_test/*/obj/
 peda-session-*.txt
 core.*
 !core.c
+!core.h
 
 # =============================================
 # 文档和压缩文件 (可选)                       #
