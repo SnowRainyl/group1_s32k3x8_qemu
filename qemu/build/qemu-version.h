@@ -1,2 +1,0 @@
-#define QEMU_PKGVERSION ""
-#define QEMU_FULL_VERSION "9.1.91"

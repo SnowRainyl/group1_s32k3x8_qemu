@@ -71,16 +71,33 @@ static void uart_send_string(const char *str)
 }
 
 /* FreeRTOS task */
-void TxTask(void *parameters)
+void TxTask1(void *parameters)
 {
     (void)parameters;
     
     /* Task loop */
     for(;;) {
-        uart_send_string("Hello from FreeRTOS running in QEMU on S32K3X8!\r\n");
+	uart_send_string("|======================================================|\r\n");
+
+        uart_send_string(" Hello task1 from FreeRTOS running in QEMU on S32K3X8!\r\n");
         vTaskDelay(pdMS_TO_TICKS(1000));  /* Delay for 1 second */
     }
 }
+
+
+void TxTask2(void *parameters)
+{
+    (void)parameters;
+    
+    /* Task loop */
+    for(;;) {
+	uart_send_string("|======================================================|\r\n");
+        uart_send_string(" Hello task2 from FreeRTOS running in QEMU on S32K3X8!\r\n");
+        vTaskDelay(pdMS_TO_TICKS(1000));  /* Delay for 1 second */
+    }
+}
+
+
 
 /* Main function */
 int main(void)
@@ -91,10 +108,15 @@ int main(void)
     uart_send_string(">>> Initializing...\r\n");
 
     /* Create transmit task */
-    if (xTaskCreate(TxTask, "TxTask", configMINIMAL_STACK_SIZE, NULL, mainTASK_PRIORITY, NULL) != pdPASS) {
+    if (xTaskCreate(TxTask1, "TxTask1", configMINIMAL_STACK_SIZE, NULL, mainTASK_PRIORITY, NULL) != pdPASS) {
         uart_send_string("ERROR: Failed to create TxTask\r\n");
         return 1;
     }
+    if(xTaskCreate(TxTask2, "TxTask2", configMINIMAL_STACK_SIZE, NULL, mainTASK_PRIORITY-1, NULL) != pdPASS) {
+        uart_send_string("ERROR: Failed to create TxTask\r\n");
+        return 1;
+    }
+
     
     uart_send_string(">>> Starting FreeRTOS scheduler...\r\n");
     
