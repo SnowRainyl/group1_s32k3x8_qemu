@@ -88,22 +88,22 @@ This is the main directory structure of the cloned repository (`group1/`):
 
 ```text
 
-├── Demo/                   # 包含演示代码和 FreeRTOS 文件
-│   ├── Firmware/           # 固件源代码和构建文件
-│   ├── FreeRTOS/           # FreeRTOS 内核源文件 (或作为子模块)
-│   └── Headers/            # 项目共享头文件
-├── img/                    # 包含文档中使用的图片 (例如 README 中的图片)
-├── materials/              # 包含相关的参考资料和工具
-│   ├── fmstr_uart_s32k358.zip  # FreeMASTER UART S32K358 相关文件
-│   └── split_rm.zip        # 其他资料压缩文件
-├── qemu/                   # QEMU 源码 (已包含板级和外设修改)
-│   ├── hw/                 # QEMU 硬件模型
-│   ├── build/              # QEMU 的编译输出目录 (如果在此处构建)
-│   ├── configure           # QEMU 配置脚本
-│   ├── ...                 # 其他 QEMU 核心源码、工具和文档目录
-│   └── README.rst          # QEMU 自身的 README
-├── LICENSE                 # 项目的软件许可证文件
-└── README.md               # 本项目说明文件
+├── Demo/                   # Contains demo code and FreeRTOS files
+│   ├── Firmware/           # Firmware source code and build files
+│   ├── FreeRTOS/           # FreeRTOS kernel source (or submodule)
+│   └── Headers/            # Shared project header files
+├── img/                    # Contains images for documentation (e.g., README)
+├── materials/              # Contains related reference materials and tools
+│   ├── fmstr_uart_s32k358.zip  # FreeMASTER UART S32K358 related files
+│   └── split_rm.zip        # Other material archive
+├── qemu/                   # QEMU source code (includes board/peripheral modifications)
+│   ├── hw/                 # QEMU hardware models
+│   ├── build/              # QEMU build output directory (if built here)
+│   ├── configure           # QEMU configuration script
+│   ├── ...                 # Other QEMU core source, tools, and docs
+│   └── README.rst          # QEMU's own README
+├── LICENSE                 # Project's software license file
+└── README.md               # This project description file
 ```
 
 **Key Directory Explanations:**
