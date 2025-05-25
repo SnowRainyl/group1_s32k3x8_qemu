@@ -115,7 +115,6 @@ This is the main directory structure of the cloned repository (`group1/`):
 * **`materials/`**: This directory includes supplementary materials. These could be documents or third-party tools related to the project.
 * **`qemu/`**: This is the QEMU source code directory. This QEMU version is already modified. It includes emulation code for the S32K3X8EVB board and LPUART peripheral.
 * **`README.md`**: This file. It provides an overview, setup guide, and usage instructions for the project.
-* **`work.docx`**: A Word document. It might contain project reports or design notes.
 
 *(The `qemu/` directory is very large. The list above highlights parts relevant to this project's context. Refer to the "Installation and Setup" section for build and integration details.)*
 
