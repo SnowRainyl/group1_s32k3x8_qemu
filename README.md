@@ -21,7 +21,7 @@
           ```
       * Next, clone the Git repository. Use the specified branch. Include its submodules.
           ```bash
-          git clone --recurse-submodules [https://baltig.polito.it/eos2024/group1.git](https://baltig.polito.it/eos2024/group1.git)
+          git clone --recurse-submodules https://baltig.polito.it/eos2024/group1.git
           ```
 
   2.  **Install Dependencies**
