@@ -81,21 +81,26 @@
   **Expected Output Example:**
   The console should display messages similar to these:
 
-![image-20250525202512245](/home/yuqi/.config/Typora/typora-user-images/image-20250525202512245.png)
+![image-20250525202512245](./img/testing_result.png)
 
 ## Project Structure
 This is the main directory structure of the cloned repository (`group1/`):
 
 ├── Demo/                   # Contains demo code and FreeRTOS files
 │   ├── Firmware/           # Firmware source code and build files
-│   ├── FreeRTOS/           # FreeRTOS kernel source
+│   ├── FreeRTOS/           # FreeRTOS kernel source (or submodule)
 │   └── Headers/            # Shared project header files
+├── img/                    # Contains images for documentation (e.g., README)
 ├── materials/              # Contains related reference materials and tools
 │   ├── fmstr_uart_s32k358.zip  # FreeMASTER UART S32K358 related files
 │   └── split_rm.zip        # Other material archive
 ├── qemu/                   # QEMU source code (includes board/peripheral modifications)
-├── README.md               # This project description file
-└── work.docx               # Project-related work document
+│   ├── hw/                 # QEMU hardware models
+│   ├── build/              # QEMU build output directory (if built here)
+│   ├── configure           # QEMU configuration script
+│   └── ...                 # Other QEMU core source, tools, and docs
+├── LICENSE                 # Project's software license file
+└── README.md               # This project description file
 
 
 **Key Directory Explanations:**
