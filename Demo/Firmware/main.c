@@ -2,51 +2,9 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "portmacro.h" 
-/* UART register definitions */
-#define S32K3_PERIPH_BASE        0x40000000
-#define S32K3_UART_BASE          (S32K3_PERIPH_BASE + 0x4A000) 
-
-/* UART register offsets */
-#define GLOBAL_OFFSET     0x08    /* Global register */
-#define BAUD_OFFSET       0x10    /* Baud rate register */
-#define STAT_OFFSET       0x14    /* Status register */
-#define CTRL_OFFSET       0x18    /* Control register */
-#define DATA_OFFSET       0x1C    /* Data register */
-#define FIFO_OFFSET       0x28    /* FIFO register */
-#define WATER_OFFSET      0x2C    /* Watermark register */
-
-/* UART bit definitions */
-#define GLOBAL_RST        (1 << 0)    /* Software reset */
-#define GLOBAL_ENABLE     (1 << 1)    /* UART enable */
-#define CTRL_TE           (1 << 19)   /* Transmit enable */
-#define CTRL_RE           (1 << 18)   /* Receive enable */
-#define STAT_TC           (1 << 22)   /* Transmission complete flag */
-#define STAT_TDRE         (1 << 23)   /* Transmit data register empty flag */
-#define FIFO_RXFE         (1 << 3)    /* Receive FIFO enable */
-#define FIFO_TXFE         (1 << 7)    /* Transmit FIFO enable */
-
-/* Access macros */
-#define UART_REG(offset) (*(volatile uint32_t *)(S32K3_UART_BASE + (offset)))
-#define mainTASK_PRIORITY ( tskIDLE_PRIORITY + 2 )
-
-/* UART driver functions */
-static void uart_init(void)
-{
-    /* Reset UART */
-    UART_REG(GLOBAL_OFFSET) |= GLOBAL_RST;
-    
-    /* Enable UART after reset */
-    UART_REG(GLOBAL_OFFSET) |= GLOBAL_ENABLE;
-    
-    /* Enable FIFOs */
-    UART_REG(FIFO_OFFSET) |= (FIFO_RXFE | FIFO_TXFE);
-    
-    /* Configure watermark - set to 0 to trigger status changes as soon as possible */
-    UART_REG(WATER_OFFSET) = 0x00000000;
-    
-    /* Enable transmitter and receiver */
-    UART_REG(CTRL_OFFSET) |= (CTRL_TE | CTRL_RE);
-}
+#include "LPUART.h"
+#include <stdio.h>      
+#include <string.h>    
 
 static void uart_send_byte(uint8_t byte)
 {
@@ -80,7 +38,7 @@ void TxTask1(void *parameters)
 	uart_send_string("|======================================================|\r\n");
 
         uart_send_string(" Hello task1 from FreeRTOS running in QEMU on S32K3X8!\r\n");
-        vTaskDelay(pdMS_TO_TICKS(1000));  /* Delay for 1 second */
+        vTaskDelay(pdMS_TO_TICKS(1000));  
     }
 }
 
@@ -93,10 +51,48 @@ void TxTask2(void *parameters)
     for(;;) {
 	uart_send_string("|======================================================|\r\n");
         uart_send_string(" Hello task2 from FreeRTOS running in QEMU on S32K3X8!\r\n");
-        vTaskDelay(pdMS_TO_TICKS(1000));  /* Delay for 1 second */
+        vTaskDelay(pdMS_TO_TICKS(1000));  
     }
 }
 
+/* UART register status check task */
+void UartStatusTask(void *parameters)
+{
+    (void)parameters;
+    uint32_t check_count = 0;
+    
+    uart_send_string(">>> UART Status Check Task Started\r\n");
+    
+    for(;;) {
+        check_count++;
+        
+        uart_send_string("|======================================================|\r\n");
+        uart_send_string(" UART Status Check #");
+        
+        char status_str[32];
+        sprintf(status_str, "%lu", check_count);
+        uart_send_string(status_str);
+        uart_send_string("\r\n");
+        
+        /* Read and display the UART status register*/
+        uint32_t status_reg = UART_REG(STAT_OFFSET);
+        sprintf(status_str, " STAT Register: 0x%08lX\r\n", status_reg);
+        uart_send_string(status_str);
+        
+        /* Check each status bit */
+        uart_send_string(" Status Bits:\r\n");
+        uart_send_string(status_reg & STAT_TDRE ? "  TDRE: SET (TX Ready)\r\n" : "  TDRE: CLEAR\r\n");
+        uart_send_string(status_reg & STAT_TC ? "  TC: SET (TX Complete)\r\n" : "  TC: CLEAR\r\n");
+        uart_send_string(status_reg & STAT_RDRF ? "  RDRF: SET (RX Data Available)\r\n" : "  RDRF: CLEAR\r\n");
+        
+        /* Check FIFO status*/
+        uint32_t fifo_reg = UART_REG(FIFO_OFFSET);
+        sprintf(status_str, " FIFO Register: 0x%08lX\r\n", fifo_reg);
+        uart_send_string(status_str);
+        
+        vTaskDelay(pdMS_TO_TICKS(1000)); 
+    }
+}
 
 
 /* Main function */
@@ -116,7 +112,10 @@ int main(void)
         uart_send_string("ERROR: Failed to create TxTask\r\n");
         return 1;
     }
-
+    if(xTaskCreate(UartStatusTask, "StatusTask", configMINIMAL_STACK_SIZE, NULL, mainTASK_PRIORITY-2, NULL) != pdPASS) {
+        uart_send_string("ERROR: Failed to create StatusTask\r\n");
+        return 1;
+    }
     
     uart_send_string(">>> Starting FreeRTOS scheduler...\r\n");
     

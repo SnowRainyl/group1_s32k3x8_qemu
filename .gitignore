@@ -1,26 +1,26 @@
 # =============================================
-# 嵌入式项目 .gitignore                        #
+# Embedded Project .gitignore                 #
 # =============================================
 
 # =============================================
-# QEMU 相关忽略                               #
+# QEMU Related Ignores                        #
 # =============================================
-# QEMU 构建输出
+# QEMU Build Output
 qemu/build/
 qemu/debug.log
 qemu/qemu.log
 qemu/qemu1.log
 qemu/*.log
 
-# QEMU 生成的文件
+# QEMU Generated Files
 qemu/**/__pycache__/
 qemu/**/*.pyc
 qemu/**/*.pyo
 
 # =============================================
-# 嵌入式开发文件                              #
+# Embedded Development Files                  #
 # =============================================
-# 编译输出
+# Compilation Output
 *.o
 *.elf
 new_test/Firmware/*.bin
@@ -30,28 +30,28 @@ new_test/Firmware/*.bin
 *.d
 *.su
 
-# 特定固件file
+# Specific Firmware Files
 firmware.*
 main.o
 startup_*.o
 system_*.o
 *_ARMCM7.o
 
-# 构建目录
+# Build Directories
 build/
 obj/
 output/
 Debug/
 Release/
 
-# FreeRTOS 相关
+# FreeRTOS Related
 new_test/Firmware/build/
 new_test/*/build/
 new_test/*/obj/
 # =============================================
-# Ubuntu/Linux 系统文件                       #
+# Ubuntu/Linux System Files                   #
 # =============================================
-# Vim/编辑器临时文件
+# Vim/Editor Temporary Files
 *.swp
 *.swo
 *.un~
@@ -59,14 +59,14 @@ new_test/*/obj/
 .netrwhist
 *~
 
-# 系统生成文件
+# System Generated Files
 .fuse_hidden*
 .directory
 .Trash-*
 .nfs*
 
 # =============================================
-# 调试和分析工具                              #
+# Debugging and Analysis Tools                #
 # =============================================
 # GDB
 .gdb_history
@@ -76,18 +76,18 @@ core.*
 !core.h
 
 # =============================================
-# 文档和压缩文件 (可选)                       #
+# Documents and Compressed Files (Optional)   #
 # =============================================
-# 如果这些是临时文件，可以取消注释
+# Uncomment if these are temporary files
 # *.zip
 # *.tar.gz
 # *.docx
 
-# 但保留 materials 中的重要文件
+# But keep important files in materials
 !materials/*.zip
 
 # =============================================
-# 日志和临时文件                              #
+# Log and Temporary Files                     #
 # =============================================
 *.log
 *.tmp
@@ -96,15 +96,15 @@ core.*
 *.old
 
 # =============================================
-# Git 相关                                   #
+# Git Related                                 #
 # =============================================
-# Git hooks (如果是个人定制的)
+# Git hooks (if personally customized)
 .git/hooks/
 
 # =============================================
-# 其他                                       #
+# Others                                      #
 # =============================================
-# 备份文件
+# Backup Files
 *~
 *.orig
 *.rej
