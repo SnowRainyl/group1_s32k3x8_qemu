@@ -38,7 +38,9 @@ typedef struct S32K3X8RAMState {
 } S32K3X8RAMState;
 
 
-// 板级状态结构体
+#define S32K3X8_LPSPI_COUNT 6
+
+// 板级状态结构体 - 添加 LPSPI 支持
 typedef struct S32K3X8EVBState {
     MachineState parent_obj;
     DeviceState *rom;
@@ -46,6 +48,10 @@ typedef struct S32K3X8EVBState {
     ARMv7MState armv7m;
     DeviceState *uart;
     DeviceState *spi;
+    
+    /* 新增：LPSPI 设备数组 */
+    DeviceState *lpspi[S32K3X8_LPSPI_COUNT];  /* LPSPI0-LPSPI5 */
+    
 } S32K3X8EVBState;
 
 // 声明状态检查宏

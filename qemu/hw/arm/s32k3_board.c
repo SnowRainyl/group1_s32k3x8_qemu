@@ -9,6 +9,7 @@
 #include "hw/sysbus.h"
 #include "hw/arm/s32k3x8evb.h"
 #include "hw/char/s32k3x8_uart.h"
+#include "hw/ssi/s32k358_spi.h"
 #include "hw/arm/boot.h"
 #include "hw/qdev-properties.h"
 #include "hw/qdev-clock.h"
@@ -62,6 +63,20 @@
 // System frequency definitions
 #define S32K3_SYSCLK_FREQ        (160 * 1000 * 1000)  // 160MHz
 
+#define S32K3_LPSPI0_BASE        (S32K3_PERIPH_BASE + 0x358000) // 0x40358000
+#define S32K3_LPSPI1_BASE        (S32K3_PERIPH_BASE + 0x35C000) // 0x4035C000
+#define S32K3_LPSPI2_BASE        (S32K3_PERIPH_BASE + 0x360000) // 0x40360000
+#define S32K3_LPSPI3_BASE        (S32K3_PERIPH_BASE + 0x364000) // 0x40364000
+#define S32K3_LPSPI4_BASE        (S32K3_PERIPH_BASE + 0x4BC000) // 0x404BC000
+#define S32K3_LPSPI5_BASE        (S32K3_PERIPH_BASE + 0x4C0000) // 0x404C0000
+
+// Add LPSPI interrupt number definitions (based on S32K3X8 interrupt table)
+#define S32K3_LPSPI0_IRQ         69
+#define S32K3_LPSPI1_IRQ         70
+#define S32K3_LPSPI2_IRQ         71
+#define S32K3_LPSPI3_IRQ         72
+#define S32K3_LPSPI4_IRQ         73
+#define S32K3_LPSPI5_IRQ         74
 
 // Memory mapping initialization function
 static void s32k3x8_initialize_memory_regions(MemoryRegion *system_memory)
@@ -132,6 +147,82 @@ static void s32k3x8_initialize_memory_regions(MemoryRegion *system_memory)
   
 
 }
+static void s32k3x8_init_lpspi(S32K3X8EVBState *s, MemoryRegion *system_memory, 
+                               Clock *sysclk, ARMv7MState *armv7m)
+{
+    DeviceState *dev;
+    
+    qemu_log_mask(CPU_LOG_INT, "Initializing LPSPI devices\n");
+    
+    // LPSPI0 initialization
+    dev = qdev_new(TYPE_S32K3X8_LPSPI);
+    s->lpspi[0] = dev;
+    if (!sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_abort)) {
+        error_report("Failed to realize LPSPI0");
+        return;
+    }
+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, S32K3_LPSPI0_BASE);
+    sysbus_connect_irq(SYS_BUS_DEVICE(dev), 0, 
+                       qdev_get_gpio_in(DEVICE(armv7m), S32K3_LPSPI0_IRQ));
+    
+    // LPSPI1 initialization
+    dev = qdev_new(TYPE_S32K3X8_LPSPI);
+    s->lpspi[1] = dev;
+    if (!sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_abort)) {
+        error_report("Failed to realize LPSPI1");
+        return;
+    }
+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, S32K3_LPSPI1_BASE);
+    sysbus_connect_irq(SYS_BUS_DEVICE(dev), 0, 
+                       qdev_get_gpio_in(DEVICE(armv7m), S32K3_LPSPI1_IRQ));
+    
+    // LPSPI2 initialization
+    dev = qdev_new(TYPE_S32K3X8_LPSPI);
+    s->lpspi[2] = dev;
+    if (!sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_abort)) {
+        error_report("Failed to realize LPSPI2");
+        return;
+    }
+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, S32K3_LPSPI2_BASE);
+    sysbus_connect_irq(SYS_BUS_DEVICE(dev), 0, 
+                       qdev_get_gpio_in(DEVICE(armv7m), S32K3_LPSPI2_IRQ));
+    
+    // LPSPI3 initialization
+    dev = qdev_new(TYPE_S32K3X8_LPSPI);
+    s->lpspi[3] = dev;
+    if (!sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_abort)) {
+        error_report("Failed to realize LPSPI3");
+        return;
+    }
+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, S32K3_LPSPI3_BASE);
+    sysbus_connect_irq(SYS_BUS_DEVICE(dev), 0, 
+                       qdev_get_gpio_in(DEVICE(armv7m), S32K3_LPSPI3_IRQ));
+    
+    // LPSPI4 initialization
+    dev = qdev_new(TYPE_S32K3X8_LPSPI);
+    s->lpspi[4] = dev;
+    if (!sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_abort)) {
+        error_report("Failed to realize LPSPI4");
+        return;
+    }
+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, S32K3_LPSPI4_BASE);
+    sysbus_connect_irq(SYS_BUS_DEVICE(dev), 0, 
+                       qdev_get_gpio_in(DEVICE(armv7m), S32K3_LPSPI4_IRQ));
+    
+    // LPSPI5 initialization
+    dev = qdev_new(TYPE_S32K3X8_LPSPI);
+    s->lpspi[5] = dev;
+    if (!sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_abort)) {
+        error_report("Failed to realize LPSPI5");
+        return;
+    }
+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, S32K3_LPSPI5_BASE);
+    sysbus_connect_irq(SYS_BUS_DEVICE(dev), 0, 
+                       qdev_get_gpio_in(DEVICE(armv7m), S32K3_LPSPI5_IRQ));
+    
+    qemu_log_mask(CPU_LOG_INT, "LPSPI devices initialized successfully\n");
+}
+
 
 // board_init
 
@@ -205,7 +296,11 @@ static void s32k3x8evb_init(MachineState *machine)
     
     // Map UART - adjusted according to reference manual
     sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, S32K3_UART_BASE);
-    qemu_log_mask(CPU_LOG_INT, "S32K3X8EVB board initialization complete\n");       
+  
+    // 10. Added: Initialize LPSPI devices
+    s32k3x8_init_lpspi(s, system_memory, sysclk, &s->armv7m);    
+    qemu_log_mask(CPU_LOG_INT, "S32K3X8EVB board initialization complete\n"); 
+
 
 }
 

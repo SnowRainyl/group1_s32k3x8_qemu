@@ -57,7 +57,8 @@ LDFLAGS = $(COMMON_FLAGS) $(FPU_FLAGS) \
 SRC_C = \
     main.c \
     startup_ARMCM7.c\
-    system_ARMCM7.c
+    system_ARMCM7.c\
+    LPSPI.c
 
 # FreeRTOS source files
 FREERTOS_SRC = \
