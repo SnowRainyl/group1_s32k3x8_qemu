@@ -70,7 +70,7 @@
 #define S32K3_LPSPI4_BASE        (S32K3_PERIPH_BASE + 0x4BC000) // 0x404BC000
 #define S32K3_LPSPI5_BASE        (S32K3_PERIPH_BASE + 0x4C0000) // 0x404C0000
 
-// Add LPSPI interrupt number definitions (based on S32K3X8 interrupt table)
+//LPSPI interrupt number definitions
 #define S32K3_LPSPI0_IRQ         69
 #define S32K3_LPSPI1_IRQ         70
 #define S32K3_LPSPI2_IRQ         71
@@ -78,7 +78,7 @@
 #define S32K3_LPSPI4_IRQ         73
 #define S32K3_LPSPI5_IRQ         74
 
-// Memory mapping initialization function
+/*Memory mapping initialization function*/
 static void s32k3x8_initialize_memory_regions(MemoryRegion *system_memory)
 {
     qemu_log_mask(CPU_LOG_INT, "\n------------------ Initialization of the memory regions ------------------\n");
@@ -154,7 +154,6 @@ static void s32k3x8_init_lpspi(S32K3X8EVBState *s, MemoryRegion *system_memory,
     
     qemu_log_mask(CPU_LOG_INT, "Initializing LPSPI devices\n");
     
-    // LPSPI0 initialization
     dev = qdev_new(TYPE_S32K3X8_LPSPI);
     s->lpspi[0] = dev;
     if (!sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_abort)) {
@@ -165,7 +164,6 @@ static void s32k3x8_init_lpspi(S32K3X8EVBState *s, MemoryRegion *system_memory,
     sysbus_connect_irq(SYS_BUS_DEVICE(dev), 0, 
                        qdev_get_gpio_in(DEVICE(armv7m), S32K3_LPSPI0_IRQ));
     
-    // LPSPI1 initialization
     dev = qdev_new(TYPE_S32K3X8_LPSPI);
     s->lpspi[1] = dev;
     if (!sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_abort)) {
@@ -176,7 +174,6 @@ static void s32k3x8_init_lpspi(S32K3X8EVBState *s, MemoryRegion *system_memory,
     sysbus_connect_irq(SYS_BUS_DEVICE(dev), 0, 
                        qdev_get_gpio_in(DEVICE(armv7m), S32K3_LPSPI1_IRQ));
     
-    // LPSPI2 initialization
     dev = qdev_new(TYPE_S32K3X8_LPSPI);
     s->lpspi[2] = dev;
     if (!sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_abort)) {
@@ -187,7 +184,6 @@ static void s32k3x8_init_lpspi(S32K3X8EVBState *s, MemoryRegion *system_memory,
     sysbus_connect_irq(SYS_BUS_DEVICE(dev), 0, 
                        qdev_get_gpio_in(DEVICE(armv7m), S32K3_LPSPI2_IRQ));
     
-    // LPSPI3 initialization
     dev = qdev_new(TYPE_S32K3X8_LPSPI);
     s->lpspi[3] = dev;
     if (!sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_abort)) {
@@ -198,7 +194,6 @@ static void s32k3x8_init_lpspi(S32K3X8EVBState *s, MemoryRegion *system_memory,
     sysbus_connect_irq(SYS_BUS_DEVICE(dev), 0, 
                        qdev_get_gpio_in(DEVICE(armv7m), S32K3_LPSPI3_IRQ));
     
-    // LPSPI4 initialization
     dev = qdev_new(TYPE_S32K3X8_LPSPI);
     s->lpspi[4] = dev;
     if (!sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_abort)) {
@@ -209,7 +204,6 @@ static void s32k3x8_init_lpspi(S32K3X8EVBState *s, MemoryRegion *system_memory,
     sysbus_connect_irq(SYS_BUS_DEVICE(dev), 0, 
                        qdev_get_gpio_in(DEVICE(armv7m), S32K3_LPSPI4_IRQ));
     
-    // LPSPI5 initialization
     dev = qdev_new(TYPE_S32K3X8_LPSPI);
     s->lpspi[5] = dev;
     if (!sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_abort)) {
@@ -224,8 +218,7 @@ static void s32k3x8_init_lpspi(S32K3X8EVBState *s, MemoryRegion *system_memory,
 }
 
 
-// board_init
-
+/*board_init*/
 static void s32k3x8evb_init(MachineState *machine)
 {
     S32K3X8EVBState *s = S32K3X8EVB_MACHINE(machine);
@@ -234,17 +227,17 @@ static void s32k3x8evb_init(MachineState *machine)
     
     qemu_log_mask(CPU_LOG_INT, "Initializing S32K3X8EVB board\n");
     
-    // 1. Check and get system memory
+    /*1. Check and get system memory*/
     MemoryRegion *system_memory = get_system_memory();
     if (!system_memory) {
         error_report("Failed to get system memory");
         return;
     }
     
-    // 2. Use memory mapping initialization method
+    /*2. Use memory mapping initialization method*/
     s32k3x8_initialize_memory_regions(system_memory);
     
-    // 3. Initialize system clock
+    /*3. Initialize system clock*/
     Clock *sysclk = clock_new(OBJECT(machine), "SYSCLK");
     if (!sysclk) {
         error_report("Failed to create system clock");
@@ -252,32 +245,31 @@ static void s32k3x8evb_init(MachineState *machine)
     }
     clock_set_hz(sysclk, S32K3_SYSCLK_FREQ);
     
-    // 4. no alias pflash-->itcm    
-   /* Create alias mapping: FLASH mapped to address 0 */
-    // 6. Initialize ARM core
+  
+    /*4. Initialize ARM core*/
     object_initialize_child(OBJECT(machine), "armv7m", &s->armv7m, TYPE_ARMV7M);
     
-    // Configure CPU
+    /*5. Configure CPU*/
     qdev_prop_set_string(DEVICE(&s->armv7m), "cpu-type", ARM_CPU_TYPE_NAME("cortex-m7"));
     qdev_prop_set_uint32(DEVICE(&s->armv7m), "init-svtor", INT_ITCM_BASE); // Vector table at address 0 (ITCM)
     qdev_prop_set_uint8(DEVICE(&s->armv7m), "num-prio-bits", 4);  // Cortex-M7 uses 4 priority bits
     qdev_prop_set_uint32(DEVICE(&s->armv7m), "num-irq", 240);     // Number of interrupts for S32K3X8
     
    
-    // 7. Set up system connections
+    /*6. Set up system connections*/
     object_property_set_link(OBJECT(&s->armv7m), "memory", 
                            OBJECT(system_memory), &error_abort);
     qdev_connect_clock_in(DEVICE(&s->armv7m), "cpuclk", sysclk);
     
-    // 8. Implement system bus device
+    /* 7. Implement system bus device*/
     if (!sysbus_realize(SYS_BUS_DEVICE(&s->armv7m), &error_local)) {
         error_reportf_err(error_local, "Failed to realize ARM core: ");
         return;
     }
-     // 5. Load firmware
+     /* 8. Load firmware*/
     armv7m_load_kernel(ARM_CPU(first_cpu), machine->kernel_filename, INT_CODE_FLASH0_BASE, FLASH_SIZE);
 
-    // 9. Initialize UART
+    /*9. Initialize UART*/
     qemu_log_mask(CPU_LOG_INT, "Initializing UART\n");
     dev = qdev_new(TYPE_S32E8_LPUART);
     if (!dev) {
@@ -285,7 +277,7 @@ static void s32k3x8evb_init(MachineState *machine)
         return;
     }
     
-    // Configure UART
+    /*10. Configure UART*/
     qdev_prop_set_chr(dev, "chardev", serial_hd(0));
     s->uart = dev;
     
@@ -294,17 +286,17 @@ static void s32k3x8evb_init(MachineState *machine)
         return;
     }
     
-    // Map UART - adjusted according to reference manual
+    /*11. Map UART - adjusted according to reference manual*/
     sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, S32K3_UART_BASE);
   
-    // 10. Added: Initialize LPSPI devices
+    /*12. Initialize LPSPI devices*/
     s32k3x8_init_lpspi(s, system_memory, sysclk, &s->armv7m);    
     qemu_log_mask(CPU_LOG_INT, "S32K3X8EVB board initialization complete\n"); 
 
 
 }
 
-// Board class initialization
+/*Board class initialization*/
 static void s32k3x8evb_class_init(ObjectClass *oc, void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
@@ -312,7 +304,7 @@ static void s32k3x8evb_class_init(ObjectClass *oc, void *data)
     mc->init = s32k3x8evb_init;
     mc->default_cpus = 1;
     mc->min_cpus = 1;
-    mc->max_cpus = 1;
+    mc->max_cpus = 2;
     mc->default_ram_size = SRAM_SIZE;
 }
 
@@ -323,7 +315,7 @@ static const TypeInfo s32k3x8evb_type = {
     .class_init = s32k3x8evb_class_init,
 };
 
-// Register machine type
+/* Register machine type*/
 static void s32k3x8evb_machine_init(void)
 {
     qemu_log_mask(CPU_LOG_INT, "Registering S32K3X8EVB machine type\n");
