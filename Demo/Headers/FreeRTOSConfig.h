@@ -12,6 +12,7 @@
 
 /* Cortex-M7 specific definitions. */
 #define configPRIO_BITS                          4   /* 4 priority bits for S32K3X8 */
+#define mainTASK_PRIORITY                       ( 4UL )
 
 /* Basic configurations */
 #define configUSE_PREEMPTION                     1

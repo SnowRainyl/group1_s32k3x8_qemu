@@ -30,5 +30,5 @@
 
 /* Access macros */
 #define UART_REG(offset) (*(volatile uint32_t *)(S32K3_UART_BASE + (offset)))
-#define mainTASK_PRIORITY ( tskIDLE_PRIORITY + 2 )
+#define mainTASK_PRIORITY ( 4UL )
 

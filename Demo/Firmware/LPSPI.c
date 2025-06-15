@@ -171,7 +171,7 @@ void lpspi_loopback_test(void)
     char debug_str[128];
     
     /* Send debug info */
-    uart_send_string("=== SPI Loopback Test Start ===\r\n");
+    uart_send_string("SPI Loopback Test Start \r\n");
     
     for (uint32_t i = 0; i < test_count; i++) {
         uint8_t tx_data = test_data[i];
@@ -203,7 +203,7 @@ void lpspi_loopback_test(void)
     }
     
     /* Test result statistics */
-    sprintf(debug_str, "=== Test Results: %lu PASS, %lu FAIL ===\r\n", 
+    sprintf(debug_str, ":Test Results: %lu PASS, %lu FAIL \r\n", 
             success_count, error_count);
     uart_send_string(debug_str);
 }
@@ -222,7 +222,7 @@ void lpspi_status_check(void)
     uint32_t tcr = LPSPI_REG(TCR_OFFSET);
     uint32_t fsr = LPSPI_REG(FSR_OFFSET);
     
-    uart_send_string("=== SPI Status Check ===\r\n");
+    uart_send_string(" SPI Status Check \r\n");
     
     sprintf(debug_str, "VERID:  0x%08lX\r\n", verid);
     uart_send_string(debug_str);
@@ -258,5 +258,5 @@ void lpspi_status_check(void)
     sprintf(debug_str, "FSR:    0x%08lX\r\n", fsr);
     uart_send_string(debug_str);
     
-    uart_send_string("========================\r\n");
+    uart_send_string("\r\n");
 }

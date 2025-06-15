@@ -36,9 +36,11 @@ void TxTask1(void *parameters)
     
     /* Task loop */
     for(;;) {
-        uart_send_string("|======================================================|\r\n");
+       //	uart_send_string("|------------------------------------------------------|\r\n");
         uart_send_string(" Hello task1 from FreeRTOS running in QEMU on S32K3X8!\r\n");
-        vTaskDelay(pdMS_TO_TICKS(1000));  
+       //	uart_send_string("|------------------------------------------------------|\r\n");
+
+        vTaskDelay(pdMS_TO_TICKS(3000));  
     }
 }
 
@@ -48,9 +50,12 @@ void TxTask2(void *parameters)
     
     /* Task loop */
     for(;;) {
-        uart_send_string("|======================================================|\r\n");
+       	//uart_send_string("|------------------------------------------------------|\r\n");
         uart_send_string(" Hello task2 from FreeRTOS running in QEMU on S32K3X8!\r\n");
-        vTaskDelay(pdMS_TO_TICKS(1000));  
+       	//uart_send_string("|------------------------------------------------------|\r\n");
+
+
+        vTaskDelay(pdMS_TO_TICKS(3000));  
     }
 }
 
@@ -59,6 +64,7 @@ void UartStatusTask(void *parameters)
 {
     (void)parameters;
     uint32_t check_count = 0;
+
     
     uart_send_string(">>> UART Status Check Task Started\r\n");
     
@@ -67,11 +73,9 @@ void UartStatusTask(void *parameters)
         
         uart_send_string("|======================================================|\r\n");
         uart_send_string(" UART Status Check #");
-        
         char status_str[32];
         sprintf(status_str, "%lu", check_count);
         uart_send_string(status_str);
-        uart_send_string("\r\n");
         
         /* Read and display the UART status register*/
         uint32_t status_reg = UART_REG(STAT_OFFSET);
@@ -88,8 +92,8 @@ void UartStatusTask(void *parameters)
         uint32_t fifo_reg = UART_REG(FIFO_OFFSET);
         sprintf(status_str, " FIFO Register: 0x%08lX\r\n", fifo_reg);
         uart_send_string(status_str);
-        
-        vTaskDelay(pdMS_TO_TICKS(3000)); 
+        uart_send_string("|------F UART status check!----------------------------|\r\n");
+        vTaskDelay(pdMS_TO_TICKS(10000)); 
     }
 }
 
@@ -97,12 +101,7 @@ void SimpleSpiTestTask(void *parameters)
 {
     (void)parameters;
     uint32_t test_count = 0;
-    
     uart_send_string(">>> Simple SPI Test Started\r\n");
-    lpspi_init();
-    uart_send_string(">>> SPI Initialized\r\n");
-    
-    uart_send_string("\r\n--- SPI Register Test ---\r\n");
     uint32_t verid = LPSPI_REG(VERID_OFFSET);
     uint32_t param = LPSPI_REG(PARAM_OFFSET);
     uint32_t sr = LPSPI_REG(SR_OFFSET);
@@ -115,16 +114,13 @@ void SimpleSpiTestTask(void *parameters)
     for(;;) {
         test_count++;
         
-        uart_send_string("\r\n+=====================================+\r\n");
+        uart_send_string("|======================================================|\r\n");
         char test_str[32];
         sprintf(test_str, "| SPI TEST #%lu |\r\n", test_count);
         uart_send_string(test_str);
-        uart_send_string("+=====================================+\r\n");
+         uart_send_string("|======================================================|\r\n");
         
-        uart_send_string("Status Check...\r\n");
         lpspi_status_check();
-        
-        uart_send_string("Loopback Test...\r\n");
         lpspi_loopback_test();
         
         uart_send_string("Data Pattern Test...\r\n");
@@ -148,48 +144,47 @@ void SimpleSpiTestTask(void *parameters)
                    counter_data, counter_rx);
             uart_send_string(test_str);
         }
-        
-        uart_send_string("Test Complete!\r\n");
-        
-        vTaskDelay(pdMS_TO_TICKS(3000));
+        uart_send_string("|------F SPI test !------------------------------------|\r\n");
+         
+        vTaskDelay(pdMS_TO_TICKS(10000));
     }
 }
 
 /* Main function */
 int main(void)
 {
-    /* Initialize UART - only once */
+    /* Initialize UART and SPI */
     uart_init();
-    uart_send_string(">>> S32K3X8 FreeRTOS + SPI Demo started\r\n");
+    lpspi_init();
+
+    uart_send_string(">>> S32K3X8 FreeRTOS Demo started\r\n");
     uart_send_string(">>> Initializing...\r\n");
 
     /* Create UART tasks */
-    if (xTaskCreate(TxTask1, "TxTask1", configMINIMAL_STACK_SIZE, NULL, mainTASK_PRIORITY, NULL) != pdPASS) {
+    if (xTaskCreate(TxTask1, "TxTask1", configMINIMAL_STACK_SIZE, NULL, mainTASK_PRIORITY -2, NULL) != pdPASS) {
         uart_send_string("ERROR: Failed to create TxTask1\r\n");
         return 1;
     }
     
-    if(xTaskCreate(TxTask2, "TxTask2", configMINIMAL_STACK_SIZE, NULL, mainTASK_PRIORITY-1, NULL) != pdPASS) {
+    if(xTaskCreate(TxTask2, "TxTask2", configMINIMAL_STACK_SIZE, NULL,  mainTASK_PRIORITY -1, NULL) != pdPASS) {
         uart_send_string("ERROR: Failed to create TxTask2\r\n");
         return 1;
     }
     
-    if(xTaskCreate(UartStatusTask, "StatusTask", configMINIMAL_STACK_SIZE, NULL, mainTASK_PRIORITY-2, NULL) != pdPASS) {
-        uart_send_string("ERROR: Failed to create StatusTask\r\n");
+    if(xTaskCreate(UartStatusTask, "StatusTask", configMINIMAL_STACK_SIZE, NULL,  mainTASK_PRIORITY -3, NULL) != pdPASS) {
+        uart_send_string("ERROR: Failed to create LpuartStatusTask\r\n");
         return 1;
     }
     
     /* Added: Create SPI test tasks */
    
-    if(xTaskCreate(SimpleSpiTestTask, "SpiTestTask", configMINIMAL_STACK_SIZE * 2, NULL, mainTASK_PRIORITY-2, NULL) != pdPASS) {
+    if(xTaskCreate(SimpleSpiTestTask, "SpiTestTask", configMINIMAL_STACK_SIZE * 2, NULL,  mainTASK_PRIORITY -4, NULL) != pdPASS) {
         uart_send_string("ERROR: Failed to create SpiTestTask\r\n");
         return 1;
     }
     
-
-    
     uart_send_string(">>> All tasks created successfully\r\n");
-    uart_send_string(">>> Starting FreeRTOS scheduler...\r\n");
+    uart_send_string(">>> Starting scheduler...\r\n");
     
     /* Start FreeRTOS scheduler */
     vTaskStartScheduler();

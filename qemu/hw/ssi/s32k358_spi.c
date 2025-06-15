@@ -447,7 +447,7 @@ static const TypeInfo s32k3x8_lpspi_info = {
 
 void s32k3x8_lpspi_register_types(void)
 {
-	 printf("Registering S32K3X8 LPSPI type: %s\n", TYPE_S32K3X8_LPSPI);
+	
     type_register_static(&s32k3x8_lpspi_info);
 }
 

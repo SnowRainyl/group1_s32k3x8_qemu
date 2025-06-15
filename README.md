@@ -1,13 +1,13 @@
 - # QEMU S32K3X8 Emulation with FreeRTOS Demo
 
   ## Description
-  This project provides an emulation environment. It uses QEMU. The project focuses on the NXP S32K3X8 series microcontroller. Specifically, it targets the S32K358EVB board. The emulation includes an LPUART peripheral. A FreeRTOS operating system runs on this emulated hardware. The FreeRTOS application demonstrates multitasking. It also shows serial communication via the LPUART. This project helps developers. They can develop and test embedded software. They do not need physical hardware for this. This is useful for early-stage verification and debugging.
+  This project provides an emulation environment. It uses QEMU. The project focuses on the NXP S32K3X8 series microcontroller. Specifically, it targets the S32K358EVB board. The emulation includes an LPUART peripheral. It also includes an LPSPI peripheral for SPI communication. A FreeRTOS operating system runs on this emulated hardware. The FreeRTOS application demonstrates multitasking. It also shows serial communication via the LPUART. It demonstrates SPI data transfer via the LPSPI. This project helps developers. They can develop and test embedded software. They do not need physical hardware for this.
 
   **Key Features:**
   * The project includes a QEMU board model. This model is for the S32K358EVB.
-  * It features LPUART peripheral emulation.
+  * It features LPUART/LPSPI peripheral emulation.
   * A FreeRTOS port for the Cortex-M7 core is available.
-  * The project contains an example FreeRTOS application. This application shows multiple tasks and UART communication.
+  * The project contains an example FreeRTOS application. This application shows multiple tasks and UART/SPI communication.
   * It provides startup code for the S32K3 microcontroller. System initialization is also included.
 
   ## Installation and Setup
@@ -81,7 +81,9 @@
   **Expected Output Example:**
   The console should display messages similar to these:
 
-![image-20250525202512245](./img/testing_result.png)
+![image-20250525202512245](./img/UartTest.png)
+
+![](/home/yuqi/torin/first_y/01_os_class/01_project/img/SPItest.png)
 
 ## Project Structure
 This is the main directory structure of the cloned repository (`group1/`):
@@ -113,7 +115,7 @@ This is the main directory structure of the cloned repository (`group1/`):
     * `Demo/FreeRTOS/`: May contain FreeRTOS kernel source files. It could also be a Git submodule.
     * `Demo/Headers/`: Stores common header files for the firmware project.
 * **`materials/`**: This directory includes supplementary materials. These could be documents or third-party tools related to the project.
-* **`qemu/`**: This is the QEMU source code directory. This QEMU version is already modified. It includes emulation code for the S32K3X8EVB board and LPUART peripheral.
+* **`qemu/`**: This is the QEMU source code directory. This QEMU version is already modified. It includes emulation code for the S32K3X8EVB board, LPUART and LPSPI peripherals.
 * **`README.md`**: This file. It provides an overview, setup guide, and usage instructions for the project.
 
 *(The `qemu/` directory is very large. The list above highlights parts relevant to this project's context. Refer to the "Installation and Setup" section for build and integration details.)*
