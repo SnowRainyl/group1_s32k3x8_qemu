@@ -1,0 +1,110 @@
+# =============================================
+# Embedded Project .gitignore                 #
+# =============================================
+
+# =============================================
+# QEMU Related Ignores                        #
+# =============================================
+# QEMU Build Output
+qemu/build/
+qemu/debug.log
+qemu/qemu.log
+qemu/qemu1.log
+qemu/*.log
+
+# QEMU Generated Files
+qemu/**/__pycache__/
+qemu/**/*.pyc
+qemu/**/*.pyo
+
+# =============================================
+# Embedded Development Files                  #
+# =============================================
+# Compilation Output
+*.o
+*.elf
+new_test/Firmware/*.bin
+*.hex
+*.map
+*.lst
+*.d
+*.su
+
+# Specific Firmware Files
+firmware.*
+main.o
+startup_*.o
+system_*.o
+*_ARMCM7.o
+
+# Build Directories
+build/
+obj/
+output/
+Debug/
+Release/
+
+# FreeRTOS Related
+new_test/Firmware/build/
+new_test/*/build/
+new_test/*/obj/
+# =============================================
+# Ubuntu/Linux System Files                   #
+# =============================================
+# Vim/Editor Temporary Files
+*.swp
+*.swo
+*.un~
+.*.swp
+.netrwhist
+*~
+
+# System Generated Files
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# =============================================
+# Debugging and Analysis Tools                #
+# =============================================
+# GDB
+.gdb_history
+peda-session-*.txt
+core.*
+!core.c
+!core.h
+
+# =============================================
+# Documents and Compressed Files (Optional)   #
+# =============================================
+# Uncomment if these are temporary files
+# *.zip
+# *.tar.gz
+# *.docx
+
+# But keep important files in materials
+!materials/*.zip
+
+# =============================================
+# Log and Temporary Files                     #
+# =============================================
+*.log
+*.tmp
+*.temp
+*.bak
+*.old
+
+# =============================================
+# Git Related                                 #
+# =============================================
+# Git hooks (if personally customized)
+.git/hooks/
+
+# =============================================
+# Others                                      #
+# =============================================
+# Backup Files
+*~
+*.orig
+*.rej

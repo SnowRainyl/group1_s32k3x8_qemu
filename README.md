@@ -1,92 +1,164 @@
-# group1
+- # QEMU S32K3X8 Emulation with FreeRTOS Demo
 
+  ## Description
+  This project provides an emulation environment. It uses QEMU. The project focuses on the NXP S32K3X8 series microcontroller. Specifically, it targets the S32K358EVB board. The emulation includes an LPUART peripheral. It also includes an LPSPI peripheral for SPI communication. A FreeRTOS operating system runs on this emulated hardware. The FreeRTOS application demonstrates multitasking. It also shows serial communication via the LPUART. It demonstrates SPI data transfer via the LPSPI. This project helps developers. They can develop and test embedded software. They do not need physical hardware for this.
 
+  **Key Features:**
+  * The project includes a QEMU board model. This model is for the S32K358EVB.
+  * It features LPUART/LPSPI peripheral emulation.
+  * A FreeRTOS port for the Cortex-M7 core is available.
+  * The project contains an example FreeRTOS application. This application shows multiple tasks and UART/SPI communication.
+  * It provides startup code for the S32K3 microcontroller. System initialization is also included.
 
-## Getting started
+  ## Installation and Setup
+  These steps will guide you through setting up the project. You will also build QEMU.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+  1.  **Prepare Project Directory and Clone Repository**
+      * First, choose or create a new directory. This directory will hold your cloned project. Let's call it `your_project_path`.
+          ```bash
+          mkdir your_project_path
+          cd your_project_path
+          ```
+      * Next, clone the Git repository. Use the specified branch. Include its submodules.
+          ```bash
+          git clone --recurse-submodules https://baltig.polito.it/eos2024/group1.git
+          ```
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+  2.  **Install Dependencies**
+      * You need to install various build tools and libraries. Open your terminal. Run the following command:
+          ```bash
+          sudo apt update
+          sudo apt install build-essential zlib1g-dev libglib2.0-dev \
+              libfdt-dev libpixman-1-dev ninja-build python3-sphinx \
+              python3-sphinx-rtd-theme pkg-config libgtk-3-dev \
+              libvte-2.91-dev libaio-dev libbluetooth-dev \
+              libbrlapi-dev libbz2-dev libcap-dev libcap-ng-dev \
+              libcurl4-gnutls-dev python3-venv gcc-arm-none-eabi cmake git
+          ```
 
-## Add your files
+  3.  **Build and Install QEMU**
+      
+      * Navigate into the QEMU directory. This directory is inside your cloned project.
+          ```bash
+          cd group1/qemu
+          ```
+          *(The `group1` directory is created by the `git clone` command above.)*
+      * Configure the build. Target the ARM softmmu.
+          ```bash
+          ./configure --target-list=arm-softmmu
+          ```
+      * Compile QEMU. Then, install QEMU.
+          ```bash
+          make
+          sudo make install
+          ```
+      
+  4.  **Verify QEMU Installation (Optional)**
+      * You can check the available ARM machine types. This helps confirm your board is listed.
+          ```bash
+          qemu-system-arm -M ?
+          ```
+          *(You should see `s32k3x8evb` or a similar name in the output list.)*
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+  ## Usage
+  Follow these steps to build and run the firmware on the emulated board.
 
+  1.  **Build and Run Firmware**
+      * Navigate to the firmware directory. This is likely `Demo/Firmware` within your cloned `group1` repository.
+          ```bash
+          cd ../Demo/Firmware 
+          ```
+          *(If you are in `group1/qemu`, use `cd ../../Demo/Firmware`. If in `group1`, use `cd Demo/Firmware`.)*
+      * Compile the firmware.
+          ```bash
+          make
+          ```
+      * Run the compiled firmware using QEMU.
+          ```bash
+          qemu-system-arm -M s32k3x8evb -nographic -kernel firmware.elf
+          ```
+
+  **Expected Output Example:**
+  The console should display messages similar to these:
+
+![image-20250525202512245](./img/UartTest.png)
+
+![](/home/yuqi/torin/first_y/01_os_class/01_project/img/SPItest.png)
+
+## Project Structure
+This is the main directory structure of the cloned repository (`group1/`):
+
+```text
+
+├── Demo/                   # Contains demo code and FreeRTOS files
+│   ├── Firmware/           # Firmware source code and build files
+│   ├── FreeRTOS/           # FreeRTOS kernel source (or submodule)
+│   └── Headers/            # Shared project header files
+├── img/                    # Contains images for documentation (e.g., README)
+├── materials/              # Contains related reference materials and tools
+│   ├── fmstr_uart_s32k358.zip  # FreeMASTER UART S32K358 related files
+│   └── split_rm.zip        # Other material archive
+├── qemu/                   # QEMU source code (includes board/peripheral modifications)
+│   ├── hw/                 # QEMU hardware models
+│   ├── build/              # QEMU build output directory (if built here)
+│   ├── configure           # QEMU configuration script
+│   ├── ...                 # Other QEMU core source, tools, and docs
+│   └── README.rst          # QEMU's own README
+├── LICENSE                 # Project's software license file
+└── README.md               # This project description file
 ```
-cd existing_repo
-git remote add origin https://baltig.polito.it/eos2024/group1.git
-git branch -M main
-git push -uf origin main
-```
 
-## Integrate with your tools
+**Key Directory Explanations:**
 
-- [ ] [Set up project integrations](https://baltig.polito.it/eos2024/group1/-/settings/integrations)
+* **`Demo/`**: This directory holds the demonstration application code. It runs on the emulated hardware.
+    * `Demo/Firmware/`: Contains core firmware logic. This includes `main.c`, startup code, linker scripts, and the `Makefile` for firmware compilation.
+    * `Demo/FreeRTOS/`: May contain FreeRTOS kernel source files. It could also be a Git submodule.
+    * `Demo/Headers/`: Stores common header files for the firmware project.
+* **`materials/`**: This directory includes supplementary materials. These could be documents or third-party tools related to the project.
+* **`qemu/`**: This is the QEMU source code directory. This QEMU version is already modified. It includes emulation code for the S32K3X8EVB board, LPUART and LPSPI peripherals.
+* **`README.md`**: This file. It provides an overview, setup guide, and usage instructions for the project.
 
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!).  Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+*(The `qemu/` directory is very large. The list above highlights parts relevant to this project's context. Refer to the "Installation and Setup" section for build and integration details.)*
 
 ## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Tell people where they can find help. This can be an issue tracker. It could also be a chat room or an email address.
+* Please submit issues via the project's GitLab Issues page.
+* (List any other support channels you offer.)
 
 ## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+If you plan future releases, list them here. This gives people an idea of where the project is going.
+* Example:
+    * Emulate more S32K3X8 peripherals (SPI, I2C, CAN).
+    * Integrate more complex demo applications.
 
 ## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+Contributions are welcome. Clearly state your requirements for accepting contributions.
+1.  Fork this repository.
+2.  Create a new branch for your feature or bugfix (e.g., `git checkout -b feature/YourFeature`).
+3.  Make your changes. Commit them with a clear message (e.g., `git commit -m 'Add some feature'`).
+4.  Push your branch to your forked repository (e.g., `git push origin feature/YourFeature`).
+5.  Create a new Merge Request.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+**Development Setup:**
+Document how contributors can set up their local development environment. Mention any scripts to run or environment variables to set. These instructions are helpful for others and your future self. You can also include commands for linting code or running tests.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+## Authors and Acknowledgment
+Authors:
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+* s338247 - Rebecca Burico(s338247@studenti.polito.it)
+* s336721 - Yuqi Li(s336721@studenti.polito.it)
+
+Acknowledgment:
+
+* Stefano Di Carlo(stefano.dicarlo@polito.it): Professor 
+* Carpegna Alessio(alessio.carpegna@polito.it): Co-lectures
+* Eftekhari Moghadam Vahid(vahid.eftekhari@polito.it): Co-lectures
+* Magliano Enrico(enrico.magliano@polito.it): Co-lectures
 
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+This project, including the source code and any accompanying documents (such as presentations, reports, etc.), is distributed under the **Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0) License**.
+
+* **Attribution (BY):** You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
+* **NonCommercial (NC):** You may not use the material for commercial purposes.
+
