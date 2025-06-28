@@ -22,21 +22,8 @@
 #define TYPE_S32K3X8EVB_MACHINE "s32k3x8evb-machine"
 
 // ROM device type definition
-#define TYPE_S32K3X8_ROM "s32k3x8.rom"
 #define VECTOR_TABLE_BASE S32K3_FLASH_BASE
 
-typedef struct S32K3X8ROMState {
-    SysBusDevice parent_obj;
-    MemoryRegion flash;
-} S32K3X8ROMState;
-
-// RAM device type definition
-#define TYPE_S32K3X8_RAM "s32k3x8.ram"
-
-typedef struct S32K3X8RAMState {
-    SysBusDevice parent_obj;
-    MemoryRegion sram;
-} S32K3X8RAMState;
 
 // Number of LPSPI instances
 #define S32K3X8_LPSPI_COUNT 6
@@ -44,8 +31,6 @@ typedef struct S32K3X8RAMState {
 // Board state structure - includes support for LPSPI
 typedef struct S32K3X8EVBState {
     MachineState parent_obj;
-    DeviceState *rom;
-    DeviceState *ram;
     ARMv7MState armv7m;
     DeviceState *uart;
     /* Added: array of LPSPI device instances (LPSPI0 to LPSPI5) */
@@ -55,7 +40,6 @@ typedef struct S32K3X8EVBState {
 // Declare instance checker macros
 DECLARE_INSTANCE_CHECKER(S32K3X8EVBState, S32K3X8EVB_MACHINE,
                          TYPE_S32K3X8EVB_MACHINE)
-DECLARE_INSTANCE_CHECKER(S32K3X8ROMState, S32K3X8_ROM, TYPE_S32K3X8_ROM)
-DECLARE_INSTANCE_CHECKER(S32K3X8RAMState, S32K3X8_RAM, TYPE_S32K3X8_RAM)
+
 
 #endif

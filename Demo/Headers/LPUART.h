@@ -1,5 +1,5 @@
 #define S32K3_PERIPH_BASE        0x40000000
-#define S32K3_UART_BASE          (S32K3_PERIPH_BASE + 0x4A000) 
+#define S32K3_UART_BASE           0x40328000
 /* UART register offsets */
 #define GLOBAL_OFFSET     0x08    /* Global register */
 #define BAUD_OFFSET       0x10    /* Baud rate register */
