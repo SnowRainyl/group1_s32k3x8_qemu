@@ -123,27 +123,7 @@ void SimpleSpiTestTask(void *parameters)
         lpspi_status_check();
         lpspi_loopback_test();
         
-        uart_send_string("Data Pattern Test...\r\n");
-        uint8_t test_values[] = {0x00, 0xFF, 0xAA, 0x55};
-        for (int i = 0; i < 4; i++) {
-            uint8_t tx_data = test_values[i];
-            uint8_t rx_data = 0;
-            
-            if (lpspi_transfer_byte(tx_data, &rx_data)) {
-                sprintf(test_str, "TX:0x%02X->RX:0x%02X %s\r\n", 
-                       tx_data, rx_data, 
-                       (tx_data == rx_data) ? "OK" : "FAIL");
-                uart_send_string(test_str);
-            }
-        }
-
-        uint8_t counter_data = (uint8_t)(test_count & 0xFF);
-        uint8_t counter_rx = 0;
-        if (lpspi_transfer_byte(counter_data, &counter_rx)) {
-            sprintf(test_str, "Counter Test: 0x%02X->0x%02X\r\n", 
-                   counter_data, counter_rx);
-            uart_send_string(test_str);
-        }
+      
         uart_send_string("|------F SPI test !------------------------------------|\r\n");
          
         vTaskDelay(pdMS_TO_TICKS(10000));
