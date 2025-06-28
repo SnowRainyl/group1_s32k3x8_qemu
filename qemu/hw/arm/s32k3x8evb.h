@@ -28,12 +28,11 @@
 // Number of LPSPI instances
 #define S32K3X8_LPSPI_COUNT 6
 
-// Board state structure - includes support for LPSPI
+// Board state structure 
 typedef struct S32K3X8EVBState {
     MachineState parent_obj;
     ARMv7MState armv7m;
     DeviceState *uart;
-    /* Added: array of LPSPI device instances (LPSPI0 to LPSPI5) */
     DeviceState *lpspi[S32K3X8_LPSPI_COUNT];
 } S32K3X8EVBState;
 
