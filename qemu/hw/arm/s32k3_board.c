@@ -58,8 +58,24 @@
 
 // Peripheral base address definitions
 #define S32K3_PERIPH_BASE        0x40000000
-#define S32K3_UART_BASE          (S32K3_PERIPH_BASE + 0x4A000) // Adjusted according to S32K3 reference manual
 
+//lpuart instance addresses
+#define S32K3_UART_BASE        0x40328000      // memory mapping file provides
+#define S32K3_LPUART1_BASE     0x4032C000
+#define S32K3_LPUART2_BASE     0x40330000
+#define S32K3_LPUART3_BASE     0x40334000
+#define S32K3_LPUART4_BASE     0x40338000
+#define S32K3_LPUART5_BASE     0x4033C000
+#define S32K3_LPUART6_BASE     0x40340000
+#define S32K3_LPUART7_BASE     0x40344000
+#define S32K3_LPUART8_BASE     0x4048C000
+#define S32K3_LPUART9_BASE     0x40490000
+#define S32K3_LPUART10_BASE    0x40494000
+#define S32K3_LPUART11_BASE    0x40498000
+#define S32K3_LPUART12_BASE    0x4049C000
+#define S32K3_LPUART13_BASE    0x404A0000
+#define S32K3_LPUART14_BASE    0x404A4000
+#define S32K3_LPUART15_BASE    0x404A8000
 // System frequency definitions
 #define S32K3_SYSCLK_FREQ        (160 * 1000 * 1000)  // 160MHz
 
