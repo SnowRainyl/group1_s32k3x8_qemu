@@ -83,7 +83,9 @@
 
 ![image-20250525202512245](./img/UartTest.png)
 
-![](/home/yuqi/torin/first_y/01_os_class/01_project/img/SPItest.png)
+
+
+![](./img/spitest.png)
 
 ## Project Structure
 This is the main directory structure of the cloned repository (`group1/`):

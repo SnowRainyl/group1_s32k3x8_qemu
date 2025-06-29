@@ -48,8 +48,8 @@ void DebugMon_Handler(void)    __attribute__ ((weak, alias("Default_Handler")));
 void INT0_Handler(void)        __attribute__ ((weak, alias("Default_Handler")));
 void INT1_Handler(void)        __attribute__ ((weak, alias("Default_Handler")));
 void LPUART_Handler(void);
-
-
+#define SCB_VTOR_ADDR    0xE000ED08  
+#define ITCM_BASE    0x00000000
 /* Vector table */
 __attribute__ ((section(".isr_vector")))
 const pFunc __Vectors[] = {
@@ -143,28 +143,36 @@ void Reset_Handler(void)
 {
     uint32_t *src, *dst;
 
-    /* Copy data from Flash to RAM (.data section) */
-    src = &__etext;        // End of text section (start of data in Flash)
-    dst = &__data_start__; // Start of data section in RAM
+    /* 1.Relocate vector table to ITCM*/
+    src = (uint32_t*)__Vectors;
+    dst = (uint32_t*)ITCM_BASE;
+    
+    for (uint32_t i = 0; i < (sizeof(__Vectors) / sizeof(uint32_t)); i++) {
+        *dst++ = *src++;
+    }
+    
+      *((volatile uint32_t*)SCB_VTOR_ADDR) = ITCM_BASE;
+    
+    /* 2. The original .data and .bss initialization*/
+    src = &__etext;
+    dst = &__data_start__;
     while (dst < &__data_end__) {
         *dst++ = *src++;
     }
 
-    /* Zero-initialize the .bss section */
     dst = &__bss_start__;
     while (dst < &__bss_end__) {
         *dst++ = 0;
     }
 
-    /* Initialize system (e.g., clock, peripherals) */
+    /* 3. system initialization */
     SystemInit();
-
-    /* Call main function */
     main();
-
-    while (1); /* Infinite loop / Safety net */
+    
+    while (1) {
+        __asm volatile ("wfi");
+    }
 }
-
 /* Default Interrupt Handler */
 void Default_Handler(void)
 {
