@@ -112,23 +112,18 @@ This is the main directory structure of the cloned repository (`group1/`):
 
 * **`Demo/`**: This directory holds the demonstration application code. It runs on the emulated hardware.
     * `Demo/Firmware/`: Contains core firmware logic. This includes `main.c`, startup code, linker scripts, and the `Makefile` for firmware compilation.
-    * `Demo/FreeRTOS/`: May contain FreeRTOS kernel source files. It could also be a Git submodule.
+    * `Demo/FreeRTOS/`: May contain FreeRTOS kernel source files.
     * `Demo/Headers/`: Stores common header files for the firmware project.
-* **`materials/`**: This directory includes supplementary materials. These could be documents or third-party tools related to the project.
+* **`materials/`**: This directory includes supplementary materials.
 * **`qemu/`**: This is the QEMU source code directory. This QEMU version is already modified. It includes emulation code for the S32K3X8EVB board, LPUART and LPSPI peripherals.
 * **`README.md`**: This file. It provides an overview, setup guide, and usage instructions for the project.
 
 *(The `qemu/` directory is very large. The list above highlights parts relevant to this project's context. Refer to the "Installation and Setup" section for build and integration details.)*
 
-## Support
-Tell people where they can find help. This can be an issue tracker. It could also be a chat room or an email address.
-* Please submit issues via the project's GitLab Issues page.
-* (List any other support channels you offer.)
-
 ## Roadmap
 If you plan future releases, list them here. This gives people an idea of where the project is going.
 * Example:
-    * Emulate more S32K3X8 peripherals (SPI, I2C, CAN).
+    * Emulate more S32K3X8 peripherals (I2C, CAN).
     * Integrate more complex demo applications.
 
 ## Contributing
